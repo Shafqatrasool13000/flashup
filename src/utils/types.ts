@@ -41,3 +41,7 @@ export interface ProtocolInputs {
 export interface AddProtocolInitValues {
   inputsData: any;
 }
+
+export interface ProtocotInputStyleProps {
+  textAlign: string;
+}

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useId, useState } from "react";
+import { useContext, useEffect, useId } from "react";
 import { Col, Row } from "react-bootstrap";
 import {
   FaArrowAltCircleLeft,
@@ -28,7 +28,7 @@ import { useEncode } from "../../hooks/useEncode";
 import useApprove from "../../hooks/useApprove";
 import { AddProtocolInitValues } from "../../utils/types";
 import { toast } from "react-toastify";
-import { BigNumber, constants } from "ethers";
+import { BigNumber } from "ethers";
 import useTransfer from "../../hooks/useTransfer";
 import useStableToken from "../../hooks/useStableToken";
 import useVariableToken from "../../hooks/useVariableToken";
@@ -42,11 +42,8 @@ import {
 } from "./functional";
 import {
   AbiCoder,
-  arrayify,
-  Bytes,
   BytesLike,
   formatBytes32String,
-  parseBytes32String,
   parseEther,
   parseUnits,
 } from "ethers/lib/utils";
@@ -57,13 +54,6 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
   const protocol_id = useId();
   const { chain } = useNetwork();
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-
-  const abiCoder = new AbiCoder();
-  //  get token symbol
-  // const getTokenSymbol=() => {}
-
-  // get amount
-  // const getAmount = () => {};
 
   // Initial Values
 
@@ -81,6 +71,57 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
     ),
   });
 
+  // Formik Hanlder
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+    validationSchema,
+  });
+
+  // Approve Switcher
+  const approveSwitcher = (methodName: string) => {
+    switch (methodName) {
+      case "deposit":
+        return getTokenAddress(data, chain?.id, 0, formik);
+      case "withdraw":
+        return getATokenAddress(data, chain?.id, formik);
+      default:
+        return getTokenAddress(data, chain?.id, 0, formik);
+    }
+  };
+
+  // Execution Switcher
+  const executionSwitcher = (methodName: string) => {
+    switch (methodName) {
+      case "withdraw":
+        return getATokenAddress(data, chain?.id, formik);
+      default:
+        return null;
+    }
+  };
+
+  // Eth Methods Switchers
+
+  const EthMethodSwitcher = (methodName: string) => {
+    switch (methodName) {
+      case "repayETH":
+        return address;
+      case "withdrawETH":
+        return "0xe91D55AB2240594855aBd11b3faAE801Fd4c4687";
+      case "borrowETH":
+        return address;
+      default:
+        return null;
+    }
+  };
+
+  const abiCoder = new AbiCoder();
+  //  get token symbol
+  // const getTokenSymbol=() => {}
+
+  // get amount
+  // const getAmount = () => {};
+
   // Hooks
 
   const encoder = useEncode();
@@ -93,113 +134,109 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
 
   // Approve Hanlder
   const approveHandler = () => {
-    approve(
-      getTokenAddress(data, chain?.id, 0, formik),
-      addresses.proxyMockAddress,
-      parseUnits(
-        formik.values.inputsData[0].amount.toString(),
-        getTokenDecimals(data, chain?.id, 0, formik)
-      )
-    );
     // if (Object.keys(formik.errors).length !== 0) {
     //   (() => toast("plz fill all fields"))();
     //   return;
     // }
-    // if (formik.values.inputsData[0].rateMode) {
-    //   if (formik.values.inputsData[0].rateMode.toNumber() === 1) {
-    //     stableToken(
-    //       addresses.proxyMockAddress,
-    //       parseUnits(
-    //         formik.values.inputsData[0].amount.toString(),
-    //         getTokenDecimals(data, chain?.id, 0, formik)
-    //       ),
-    //       getStableDebt(data, chain?.id, 0, formik),
-    //       getTokenDecimals(data, chain?.id, 0, formik)
-    //     );
-    //   } else {
-    //     variableToken(
-    //       addresses.proxyMockAddress,
-    //       formik.values.inputsData[0].amount,
-    //       getVariableDebt(data, chain?.id, 0, formik),
-    //       getTokenDecimals(data, chain?.id, 0, formik)
-    //     );
-    //   }
-    // } else {
-    //   if (data.methodName === "withdraw") {
-    //     approve(
-    //       // getATokenAddress(data, chain?.id, formik),
-    //       // "0x22404B0e2a7067068AcdaDd8f9D586F834cCe2c5",
-    //       getTokenAddress(data, chain?.id, 0, formik),
-    //       addresses.proxyMockAddress,
-    //       parseUnits(
-    //         formik.values.inputsData[0].amount.toString(),
-    //         getTokenDecimals(data, chain?.id, 0, formik)
-    //       )
-    //     );
-    //   } else {
-    //     console.log("simple approve handler");
-    //     approve(
-    //       getTokenAddress(data, chain?.id, 0, formik),
-    //       addresses.proxyMockAddress,
-    //       parseUnits(
-    //         formik.values.inputsData[0].amount.toString(),
-    //         getTokenDecimals(data, chain?.id, 0, formik)
-    //       )
-    //     );
-    //   }
-    // }
-  };
-
-  // Transfer Handler
-
-  const transferHandler = async () => {
-    if (Object.keys(formik.errors).length !== 0) {
-      (() => toast("plz fill all fields"))();
-      return;
+    if (formik.values.inputsData[0].rateMode) {
+      formik.values.inputsData[0].rateMode.toNumber() === 1
+        ? stableToken(
+            addresses.proxyMockAddress,
+            parseUnits(
+              formik.values.inputsData[0].amount.toString(),
+              getTokenDecimals(data, chain?.id, 0, formik)
+            ),
+            getStableDebt(data, chain?.id, 0, formik),
+            getTokenDecimals(data, chain?.id, 0, formik)
+          )
+        : variableToken(
+            addresses.proxyMockAddress,
+            formik.values.inputsData[0].amount,
+            getVariableDebt(data, chain?.id, 0, formik),
+            getTokenDecimals(data, chain?.id, 0, formik)
+          );
+    } else {
+      approve(
+        approveSwitcher(data.methodName),
+        addresses.proxyMockAddress,
+        parseUnits(
+          formik.values.inputsData[0].amount.toString(),
+          getTokenDecimals(data, chain?.id, 0, formik)
+        )
+      );
     }
-    const result = await transfer(
-      getTokenAddress(data, chain?.id, 0, formik),
-      addresses.proxyMockAddress,
-      formik.values.inputsData[0].amount,
-      getTokenDecimals(data, chain?.id, 0, formik)
-    );
-    return result;
   };
+
+  // // Transfer Handler
+
+  // const transferHandler = async () => {
+  //   if (Object.keys(formik.errors).length !== 0) {
+  //     (() => toast("plz fill all fields"))();
+  //     return;
+  //   }
+  //   const result = await transfer(
+  //     getTokenAddress(data, chain?.id, 0, formik),
+  //     addresses.proxyMockAddress,
+  //     formik.values.inputsData[0].amount,
+  //     getTokenDecimals(data, chain?.id, 0, formik)
+  //   );
+  //   return result;
+  // };
 
   // Execution Handler
 
   const executionHandler = async () => {
-    const encoded = encoder(addresses.haaveAddress, data.methodName, [
-      getTokenAddress(data, chain?.id, 0, formik),
-      parseUnits(
-        formik.values.inputsData[0].amount.toString(),
-        getTokenDecimals(data, chain?.id, 0, formik)
-      ),
-      address,
-    ]);
-    console.log({ encoded });
-    // if (Object.keys(formik.errors).length !== 0) {
-    //   (() => toast("plz fill all fields"))();
-    //   return;
-    // }
-    // const finalProtcoloData = formik.values.inputsData.map(
-    //   (objData: any, index: number) => {
-    //     delete objData["showTokens"];
-    //     return {
-    //       ...objData,
-    //       token: getTokenAddress(data, chain?.id, 0, formik),
-    //       amount: parseUnits(
-    //         formik.values.inputsData[index].amount.toString(),
-    //         getTokenDecimals(data, chain?.id, index, formik)
-    //       ),
-    //       rateMode: 2,
-    //       // aToken: getATokenAddress(data, chain?.id, formik),
-    //     };
-    //   }
-    // );
-    // const encoded = encoder(addresses.haaveAddress, data.methodName, [
-    //   ...Object.values(finalProtcoloData[0]),
-    // ]);
+    let finalProtcoloData: any;
+    if (data.methodName.includes("ETH")) {
+      finalProtcoloData = Object.values(
+        formik.values.inputsData.map((objData: any, index: number) => {
+          delete objData["showTokens"];
+          return {
+            ...objData,
+            amount: parseEther(
+              formik.values.inputsData[index].amount.toString()
+            ),
+          };
+        })
+      );
+      EthMethodSwitcher(data.methodName) &&
+        (finalProtcoloData[0]["others"] = EthMethodSwitcher(data.methodName));
+      var encoded = encoder(addresses.haaveAddress, data.methodName, [
+        ...Object.values(finalProtcoloData[0]),
+      ]);
+      console.log({ finalProtcoloData });
+      console.log({ encoded });
+      execMock(
+        addresses.haaveAddress,
+        encoded,
+        formik.values.inputsData[0].amount
+      );
+    } else {
+      finalProtcoloData = Object.values(
+        formik.values.inputsData.map((objData: any, index: number) => {
+          delete objData["showTokens"];
+          return {
+            ...objData,
+            token: getTokenAddress(data, chain?.id, 0, formik),
+            amount: parseUnits(
+              formik.values.inputsData[index].amount.toString(),
+              getTokenDecimals(data, chain?.id, index, formik)
+            ),
+            address,
+          };
+        })
+      );
+      console.log({ finalProtcoloData }, "at inital");
+      executionSwitcher(data.methodName) &&
+        (finalProtcoloData[0]["exec"] = executionSwitcher(data.methodName));
+      var encoded = encoder(addresses.haaveAddress, data.methodName, [
+        ...Object.values(finalProtcoloData[0]),
+      ]);
+      execMock(addresses.haaveAddress, encoded);
+
+      console.log({ finalProtcoloData });
+    }
+
     // console.log({ finalProtcoloData });
 
     // const encoded = encoder(addresses.haaveAddress, "withdrawETH", [
@@ -212,20 +249,26 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
     //   (() => toast("transfer done"))();
     //   setEncodeData([...encodeData, encoded]);
     // }
-    execMock(addresses.haaveAddress, encoded);
   };
 
   // Submit Handler
 
-  const onSubmit = async () => {
+  async function onSubmit() {
     const newProtocol = { ...data, initialData: [...formik.values.inputsData] };
     newProtocol[protocol_id] = protocol_id;
     setSavedProtocols([...savedProtocols, newProtocol]);
     setExchageItems([]);
     if (data.methodName === "flashLoan") {
-      let protocolData = formik.values.inputsData[0];
-
-      const drainTokenResult = drainToken([], [], []);
+      const drainTokenResult = drainToken(
+        [addresses.faucet],
+        [getTokenAddress(data, chain?.id, 0, formik)],
+        [
+          parseUnits(
+            formik.values.inputsData[0].amount.toString(),
+            getTokenDecimals(data, chain?.id, 0, formik)
+          ),
+        ]
+      );
       const encodedAbi = abiCoder.encode(
         ["address[]", "bytes32[]", "bytes[]"],
         [
@@ -235,28 +278,24 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
         ]
       );
       console.log({ drainTokenResult, encodedAbi });
-
-      // delete protocolData["token"];
-      // delete protocolData["amount"];
-      // delete protocolData["showTokens"];
-
       const encoded = encoder(addresses.haaveAddress, data.methodName, [
         [getTokenAddress(data, chain?.id, 0, formik)],
-        [parseEther("10")],
-        [parseEther("0")],
+        [
+          parseUnits(
+            formik.values.inputsData[0].amount.toString(),
+            getTokenDecimals(data, chain?.id, 0, formik)
+          ),
+        ],
+        [BigNumber.from("0")],
         encodedAbi as BytesLike,
       ]);
       console.log({ encoded }, "finalEncodedData data ...");
 
       execMock(addresses.haaveAddress, encoded);
+    } else {
+      return;
     }
-  };
-
-  const formik = useFormik({
-    initialValues,
-    onSubmit,
-    validationSchema,
-  });
+  }
 
   // Token Toggle Handler
   const handleTokensToggle = (index: number) => {
@@ -284,7 +323,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
       formik.initialValues.inputsData.push(...data?.initialData);
     }
   }
-
+  console.log(formik.values, "formik values");
   // console.log({ totalData, ltvData });
   useEffect(() => {
     if (!loading && chain?.id) {
@@ -325,7 +364,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
     addCubeModal,
     exchangeItems,
   } = useContext(ExchangerContext);
-
+  console.log(data.methodName.includes("Eth"), "includes eth");
   return (
     <FormikProvider value={formik}>
       <Form>
@@ -354,193 +393,216 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
                 ({ rateMode, onBehalfOf, modes }: any, index: number) => {
                   return (
                     <div key={index} className="input-section mt-3">
-                      {onBehalfOf && (
-                        <div className="mt-2">
-                          <label htmlFor="address">Address</label>
-                          <input
-                            type="text"
-                            value={formik.values.inputsData[index].onBehalfOf}
-                            id="address"
-                            onChange={(event) =>
-                              formik.setFieldValue(
-                                `inputsData.${index}.onBehalfOf`,
-                                event.target.value
-                              )
-                            }
-                            placeholder="ENS or Address"
-                            className="w-100 mt-2 meta-address"
-                          />
-                        </div>
-                      )}
-                      <Row className="align-items-center">
-                        <Col md={4}>
-                          <p className="input">input</p>
-                          <div className="d-flex align-items-center mb-2">
-                            <h6 className="position-relative">
-                              <span className="me-2">
-                                <Icon
-                                  icon={
-                                    data?.function_configs.tokens[
-                                      chain?.id as number
-                                    ]?.find(
-                                      ({ symbol }: any) =>
-                                        symbol ===
-                                        formik.values.inputsData[index].token
-                                    )?.icon
-                                  }
-                                  width="24"
-                                  height="24"
-                                  color="white"
-                                />
-                              </span>
-                              {formik.values.inputsData[index].token}
-                              <span>
-                                <FaCaretDown
-                                  className="more-icon"
-                                  fontSize={14}
-                                  onClick={() => {
-                                    handleTokensToggle(index);
-                                  }}
-                                />
-                              </span>
-                            </h6>
-                          </div>
-                          <div
-                            className={`position-absolute ${
-                              formik.values.inputsData[index].showTokens
-                                ? "d-block"
-                                : "d-none"
-                            }`}
-                          >
-                            <SelectToken
-                              showTokens={
-                                formik.values.inputsData[index].showTokens
-                              }
-                              tokens={
-                                data?.function_configs.tokens[
-                                  chain?.id as number
-                                ]
-                              }
-                              index={index}
-                              name={`inputsData.${index}.token`}
-                              formik={formik}
-                              handleTokensToggle={handleTokensToggle}
+                      {data.methodName.includes("ETH") ? (
+                        <>
+                          <p className="label m-0">Amount</p>
+                          <div>
+                            <InputField
+                              name={`inputsData.${index}.amount`}
+                              type="number"
+                              placeholder="Amount"
+                              textAlign="start"
                             />
                           </div>
-                          <span
-                            className={`input-text ${
-                              data?.hasOwnProperty("isFlashloan")
-                                ? "d-none"
-                                : "d-block"
-                            }`}
-                          >
-                            <FaArrowDown />
-                          </span>
-                        </Col>
-                        <Col md={8}>
-                          <InputField
-                            name={`inputsData.${index}.amount`}
-                            type="number"
-                            placeholder="Amount"
-                          />
-
-                          <div className="d-flex justify-content-end mt-4">
-                            <GetBalance
-                              token={
-                                data?.function_configs.tokens[
-                                  chain?.id as number
-                                ]?.find(
-                                  ({ symbol }: any) =>
-                                    symbol ===
-                                    formik.values.inputsData[index].token
-                                )?.address
-                              }
-                              decimal={getTokenDecimals(
-                                data,
-                                chain?.id,
-                                0,
-                                formik
-                              )}
-                            />
-                            <button className="max-btn" type="button">
-                              Max
-                            </button>
-                          </div>
-                          {rateMode && (
-                            <RateModeStyled>
-                              <Switch
-                                autoFocus={true}
-                                checkedChildren="Variable"
-                                onChange={(value) =>
+                        </>
+                      ) : (
+                        <>
+                          {onBehalfOf && (
+                            <div className="mt-2">
+                              <label htmlFor="address">Address</label>
+                              <input
+                                type="text"
+                                value={
+                                  formik.values.inputsData[index].onBehalfOf
+                                }
+                                id="address"
+                                onChange={(event) =>
                                   formik.setFieldValue(
-                                    `inputsData.${index}.rateMode`,
-                                    BigNumber.from(+value + 1)
+                                    `inputsData.${index}.onBehalfOf`,
+                                    event.target.value
                                   )
                                 }
-                                defaultChecked
-                                unCheckedChildren="Stable"
+                                placeholder="ENS or Address"
+                                className="w-100 mt-2 meta-address"
                               />
-                            </RateModeStyled>
+                            </div>
                           )}
-                        </Col>
-                      </Row>
-                      {!rateMode && !modes && (
-                        <div className="output-section mt-3">
                           <Row className="align-items-center">
                             <Col md={4}>
-                              <p className="input">Output</p>
-                              <div className="d-flex align-items-center">
-                                <h6>
+                              <p className="input">input</p>
+                              <div className="d-flex align-items-center mb-2">
+                                <h6 className="position-relative">
                                   <span className="me-2">
                                     <Icon
                                       icon={
-                                        data?.function_configs?.tokens[
-                                          chain?.id.toString() as string
+                                        data?.function_configs.tokens[
+                                          chain?.id as number
                                         ]?.find(
-                                          (tokenData: any) =>
-                                            tokenData.symbol ===
-                                            formik.values.inputsData[0].token
-                                        ).icon
+                                          ({ symbol }: any) =>
+                                            symbol ===
+                                            formik.values.inputsData[index]
+                                              .token
+                                        )?.icon
                                       }
                                       width="24"
                                       height="24"
                                       color="white"
                                     />
                                   </span>
-                                  {getATokenSymbol(data, chain?.id, formik)}
+                                  {formik.values.inputsData[index].token}
+                                  <span>
+                                    <FaCaretDown
+                                      className="more-icon"
+                                      fontSize={14}
+                                      onClick={() => {
+                                        handleTokensToggle(index);
+                                      }}
+                                    />
+                                  </span>
                                 </h6>
                               </div>
+                              <div
+                                className={`position-absolute ${
+                                  formik.values.inputsData[index].showTokens
+                                    ? "d-block"
+                                    : "d-none"
+                                }`}
+                              >
+                                <SelectToken
+                                  showTokens={
+                                    formik.values.inputsData[index].showTokens
+                                  }
+                                  tokens={
+                                    data?.function_configs.tokens[
+                                      chain?.id as number
+                                    ]
+                                  }
+                                  index={index}
+                                  name={`inputsData.${index}.token`}
+                                  formik={formik}
+                                  handleTokensToggle={handleTokensToggle}
+                                />
+                              </div>
+                              <span
+                                className={`input-text ${
+                                  data?.hasOwnProperty("isFlashloan")
+                                    ? "d-none"
+                                    : "d-block"
+                                }`}
+                              >
+                                <FaArrowDown />
+                              </span>
                             </Col>
                             <Col md={8}>
+                              <InputField
+                                name={`inputsData.${index}.amount`}
+                                type="number"
+                                placeholder="Amount"
+                                textAlign="end"
+                              />
+
                               <div className="d-flex justify-content-end mt-4">
-                                <h6>{formik.values.inputsData[0].amount}</h6>
+                                <GetBalance
+                                  token={
+                                    data?.function_configs.tokens[
+                                      chain?.id as number
+                                    ]?.find(
+                                      ({ symbol }: any) =>
+                                        symbol ===
+                                        formik.values.inputsData[index].token
+                                    )?.address
+                                  }
+                                  decimal={getTokenDecimals(
+                                    data,
+                                    chain?.id,
+                                    0,
+                                    formik
+                                  )}
+                                />
+                                <button className="max-btn" type="button">
+                                  Max
+                                </button>
                               </div>
+                              {rateMode && (
+                                <RateModeStyled>
+                                  <Switch
+                                    autoFocus={true}
+                                    checkedChildren="Variable"
+                                    onChange={(value) =>
+                                      formik.setFieldValue(
+                                        `inputsData.${index}.rateMode`,
+                                        BigNumber.from(+value + 1)
+                                      )
+                                    }
+                                    defaultChecked
+                                    unCheckedChildren="Stable"
+                                  />
+                                </RateModeStyled>
+                              )}
                             </Col>
                           </Row>
-                        </div>
-                      )}
-
-                      <div className="bottom-section mt-2">
-                        {data?.attributes?.map(
-                          ({ name, value }: any, index: number) => (
-                            <div
-                              key={index}
-                              className="d-flex justify-content-between align-items-center"
-                            >
-                              <p className="fs-6 mb-0 mt-">{name}</p>
-                              <p className="fs-6 mb-0 mt-1">
-                                {loading ? (
-                                  <Spin indicator={antIcon} />
-                                ) : error ? (
-                                  "N/A"
-                                ) : (
-                                  value + "%"
-                                )}{" "}
-                              </p>
+                          {!rateMode && !modes && (
+                            <div className="output-section mt-3">
+                              <Row className="align-items-center">
+                                <Col md={4}>
+                                  <p className="input">Output</p>
+                                  <div className="d-flex align-items-center">
+                                    <h6>
+                                      <span className="me-2">
+                                        <Icon
+                                          icon={
+                                            data?.function_configs?.tokens[
+                                              chain?.id.toString() as string
+                                            ]?.find(
+                                              (tokenData: any) =>
+                                                tokenData.symbol ===
+                                                formik.values.inputsData[0]
+                                                  .token
+                                            ).icon
+                                          }
+                                          width="24"
+                                          height="24"
+                                          color="white"
+                                        />
+                                      </span>
+                                      {getATokenSymbol(data, chain?.id, formik)}
+                                    </h6>
+                                  </div>
+                                </Col>
+                                <Col md={8}>
+                                  <div className="d-flex justify-content-end mt-4">
+                                    <h6>
+                                      {formik.values.inputsData[0].amount}
+                                    </h6>
+                                  </div>
+                                </Col>
+                              </Row>
                             </div>
-                          )
-                        )}
-                      </div>
+                          )}
+
+                          <div className="bottom-section mt-2">
+                            {data?.attributes?.map(
+                              ({ name, value }: any, index: number) => (
+                                <div
+                                  key={index}
+                                  className="d-flex justify-content-between align-items-center"
+                                >
+                                  <p className="fs-6 mb-0 mt-">{name}</p>
+                                  <p className="fs-6 mb-0 mt-1">
+                                    {loading ? (
+                                      <Spin indicator={antIcon} />
+                                    ) : error ? (
+                                      "N/A"
+                                    ) : (
+                                      value + "%"
+                                    )}{" "}
+                                  </p>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </>
+                      )}
                     </div>
                   );
                 }

@@ -10,7 +10,7 @@ export const aave2 = [
     tag: [],
     protocolName: "",
     protocolLogo: "",
-    initialData: [{ token: "DAI", amount: "", showTokens: false, address: "" }],
+    initialData: [{ token: "DAI", amount: "", showTokens: false }],
     function_configs: {
       tokens: {
         "1": aavaMainTokens,
@@ -143,7 +143,7 @@ export const aave2 = [
         amount: "",
         showTokens: false,
         rateMode: BigNumber.from(2),
-        onBehalfOf: +true,
+        // onBehalfOf: +true,
       },
     ],
     function_configs: {
@@ -203,6 +203,153 @@ export const aave2 = [
         modes: [],
         params: [],
         showTokens: false,
+      },
+    ],
+    function_configs: {
+      tokens: {
+        "1": aavaMainTokens,
+        "5": aavaTestTokens,
+      },
+      outputs: [],
+    },
+    attributes: [],
+    protocol_configs: {
+      tokenlist: [],
+      fee: 12,
+      prices: 12,
+    },
+    pool: {
+      name: "",
+      pool_address: "",
+      pool_apy: "",
+    },
+    ltv: {
+      "1": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+      "5": "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
+    },
+  },
+
+  {
+    name: "DepositETH",
+    methodName: "depositETH",
+    signature: () => console.log(""),
+    description: "",
+    tag: "",
+    protocolName: "",
+    protocolLogo: "",
+    initialData: [
+      {
+        amount: "",
+      },
+    ],
+    function_configs: {
+      tokens: {
+        "1": aavaMainTokens,
+        "5": aavaTestTokens,
+      },
+      outputs: [],
+    },
+    attributes: [],
+    protocol_configs: {
+      tokenlist: [],
+      fee: 12,
+      prices: 12,
+    },
+    pool: {
+      name: "",
+      pool_address: "",
+      pool_apy: "",
+    },
+    ltv: {
+      "1": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+      "5": "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
+    },
+  },
+
+  {
+    name: "WithdrawETH",
+    methodName: "withdrawETH",
+    signature: () => console.log(""),
+    description: "",
+    tag: "",
+    protocolName: "",
+    protocolLogo: "",
+    initialData: [
+      {
+        amount: "",
+      },
+    ],
+    function_configs: {
+      tokens: {
+        "1": aavaMainTokens,
+        "5": aavaTestTokens,
+      },
+      outputs: [],
+    },
+    attributes: [],
+    protocol_configs: {
+      tokenlist: [],
+      fee: 12,
+      prices: 12,
+    },
+    pool: {
+      name: "",
+      pool_address: "",
+      pool_apy: "",
+    },
+    ltv: {
+      "1": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+      "5": "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
+    },
+  },
+  {
+    name: "BorrowETH",
+    methodName: "borrowETH",
+    signature: () => console.log(""),
+    description: "",
+    tag: "",
+    protocolName: "",
+    protocolLogo: "",
+    initialData: [
+      {
+        amount: "",
+      },
+    ],
+    function_configs: {
+      tokens: {
+        "1": aavaMainTokens,
+        "5": aavaTestTokens,
+      },
+      outputs: [],
+    },
+    attributes: [],
+    protocol_configs: {
+      tokenlist: [],
+      fee: 12,
+      prices: 12,
+    },
+    pool: {
+      name: "",
+      pool_address: "",
+      pool_apy: "",
+    },
+    ltv: {
+      "1": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+      "5": "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
+    },
+  },
+  {
+    name: "RepayETH",
+    methodName: "repayETH",
+    signature: () => console.log(""),
+    description: "",
+    tag: "",
+    protocolName: "",
+    protocolLogo: "",
+    initialData: [
+      {
+        amount: "",
+        rate: 1,
       },
     ],
     function_configs: {

@@ -28,6 +28,10 @@ export const CubeBodyStyled = styled.div`
 export const AddProtocolStyled = styled.div`
   margin-top: 24px;
 
+  .label {
+    font-size: 18px;
+  }
+
   .back-icon,
   .more-icon {
     cursor: pointer;
@@ -55,7 +59,6 @@ export const AddProtocolStyled = styled.div`
   input {
     border: none;
     background: transparent;
-    text-align: end;
     border-bottom: 0.5px solid rgb(255, 255, 255, 0.3);
     color: white;
     font-size: 20px;

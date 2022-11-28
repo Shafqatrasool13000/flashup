@@ -1,7 +1,15 @@
 export const furocomb = ["Unstake Token", "Claim COMBO"];
 export const paraswap = ["Swap Token"];
 export const uniswap = ["Swap Token", "Add Liquidity", "Remove Liquidity"];
-export const avaeV2 = ["", "Widthdraw", "Borrow", "Repay", "Flashloan"];
+export const avaeV2 = [
+  "Widthdraw",
+  "Borrow",
+  "Repay",
+  "Flashloan",
+  "WithdrawEth",
+  "BorrowEth",
+  "RepayEth",
+];
 export const sushiswap = ["Swap Token", "Add Liquidty", "Remove Liquidity"];
 export const curve = [
   "Swap USD",

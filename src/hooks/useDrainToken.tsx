@@ -24,9 +24,9 @@ const useDrainToken = () => {
         let contract: HMock = drainTokenHandler(signer);
         try {
           const result = contract.interface.encodeFunctionData("drainTokens", [
-            [addresses.faucet],
-            ["0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33"],
-            [parseEther("10")],
+            faucetAddress,
+            tokenAddress,
+            amounts,
           ]);
           console.log(result, "data in drain token");
           return result;

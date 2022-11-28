@@ -7,9 +7,11 @@ const InputField = (props: any) => {
   // console.log(meta.error, "field error .....");
 
   return (
-    <InputFieldStyled>
+    <InputFieldStyled textAlign={props.textAlign}>
       <input
-        className={`form-control ${showFeedback ? (meta.error ? "is-invalid invalid" : "valid") : ""}`}
+        className={`form-control ${
+          showFeedback ? (meta.error ? "is-invalid invalid" : "valid") : ""
+        }`}
         {...props}
         {...field}
       />
