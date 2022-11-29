@@ -1,26 +1,26 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import Create from "../../components/Create/Index";
 import { CreateLayoutStyled } from "./style";
 import AddCube from "../../components/AddCube/Index";
 import CubeBody from "../../components/AddCube/CubeBody";
-import AddProtocol from "../../components/AddProtocol/AddProtocol";
 import { Col, Container, Row } from "react-bootstrap";
 
-import { Encode_Data, Exchange_Items } from "../../utils/types";
+import { Encode_Data } from "../../utils/types";
 import SavedProtocols from "../../components/SavedProtocols/SavedProtocols";
-import AddProtocol2 from "../../components/AddCube/AddProtocol2";
-import { useNetwork } from "wagmi";
-
-export const ExchangerContext = createContext<any>({} as Encode_Data);
+import useProtocolContext from "../../hooks/useProtocolContext";
 
 const Index = () => {
-  const [addCubeModal, setAddCubeModal] = useState(false);
-  const [exchangeItems, setExchageItems] = useState<Exchange_Items>([]);
-  const [savedProtocols, setSavedProtocols] = useState<any>([]);
-  const [encodeData, setEncodeData] = React.useState<string[]>([]);
-  const { chain } = useNetwork();
-  const [myChain, setMyChain] = useState(chain?.id);
+  const {
+    encodeData,
+    setEncodeData,
+    savedProtocols,
+    exchangeItems,
+    setExchageItems,
+    getExchangeBox,
+    addCubeModal,
+    setAddCubeModal,
+  } = useProtocolContext();
 
   console.log({ savedProtocols });
   const dragItem = useRef<number>(0);
@@ -34,12 +34,6 @@ const Index = () => {
   useEffect(() => {
     scrollToBottom();
   }, [exchangeItems]);
-
-  useEffect(() => {
-    setSavedProtocols([]);
-    setExchageItems([]);
-    setMyChain(chain?.id);
-  }, [chain?.id]);
 
   // Drag Start
   const dragStart = (position: any) => {
@@ -72,33 +66,8 @@ const Index = () => {
     setEncodeData(copyEncodeItems);
   };
 
-  const getExchangeBox = (data: any) => {
-    const nameConversion = data.name.toLowerCase();
-    console.log(nameConversion.includes("swap"));
-    if (nameConversion.includes("swap")) {
-      setExchageItems([...exchangeItems, { Component: AddProtocol2, data }]);
-      setAddCubeModal(false);
-    } else {
-      setExchageItems([...exchangeItems, { Component: AddProtocol, data }]);
-      setAddCubeModal(false);
-    }
-  };
-
   return (
-    <ExchangerContext.Provider
-      value={{
-        encodeData,
-        setEncodeData,
-        savedProtocols,
-        setSavedProtocols,
-        exchangeItems,
-        setExchageItems,
-        myChain,
-        getExchangeBox,
-        addCubeModal,
-        setAddCubeModal,
-      }}
-    >
+    <>
       <CreateLayoutStyled>
         <Container>
           <Row>
@@ -148,7 +117,7 @@ const Index = () => {
           <CubeBody getExchangeBox={getExchangeBox} />
         </AddCube>
       </CreateLayoutStyled>
-    </ExchangerContext.Provider>
+    </>
   );
 };
 

@@ -4,7 +4,7 @@ const HeadBar = ({ title }: any) => {
   return (
     <div className="d-flex head-bar mt-4">
       <FaEthereum fontSize={20} />
-      <p className="title ms-2">{title}</p>
+      <p className="title ms-2 m-0 fs-6">{title}</p>
     </div>
   );
 };

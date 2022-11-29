@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
 import { useState } from "react";
 import { useAccount } from "wagmi";
-import { ethereum } from "../App";
-import erc20Abi from "../utils/abi/erc20.json";
+import { ethereum } from "../../App";
+import erc20Abi from "../../utils/abi/erc20.json";
 
 interface GetBalanceInterface {
   token: string;

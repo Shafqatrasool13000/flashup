@@ -1,4 +1,5 @@
-import { aave2 } from "./protocols/aave";
+import aave2 from "./protocols/aave";
+import compound from "./protocols/compound";
 
 export const protocolsData = [
   //   {
@@ -29,10 +30,10 @@ export const protocolsData = [
   //     title: "Yearn",
   //     exchanger: yearn,
   //   },
-  //   {
-  //     title: "Compound",
-  //     exchanger: compound,
-  //   },
+  {
+    title: "Compound",
+    exchanger: compound,
+  },
   //   {
   //     title: "Maker",
   //     exchanger: maker,

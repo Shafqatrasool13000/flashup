@@ -31,7 +31,7 @@ img {
   max-width: 100%;
   height: auto;
 }
-@font-face {
+/* @font-face {
   font-family: "Oregano";
   src: local("SFUIText-Regular"),
     url("./assets/fonts/Oregano-Regular.ttf") format("truetype");
@@ -50,7 +50,7 @@ img {
   font-family: "OpenSansBold";
   src: local("SFUIText-Regular"),
     url("./assets/fonts/OpenSans-Bold.ttf") format("truetype");
-}
+} */
 
 /* Ennvision Fonts */
 

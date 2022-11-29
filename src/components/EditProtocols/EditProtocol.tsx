@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import {
   FaArrowAltCircleLeft,
@@ -8,7 +8,6 @@ import {
   FaEthereum,
 } from "react-icons/fa";
 import { useExecMock } from "../../hooks/useExecMock";
-import { ExchangerContext } from "../../layout/Create/Index";
 import SelectToken from "../SelectToken/SelectToken";
 import { Icon } from "@iconify/react";
 import { useFormik, FormikProvider, Form } from "formik";
@@ -16,6 +15,7 @@ import * as Yup from "yup";
 import InputField from "../InputField/InputField";
 import EditProtocolStyled from "./style";
 import { useNetwork } from "wagmi";
+import useProtocolContext from "../../hooks/useProtocolContext";
 
 const EditProtocol = ({ data, setIsEdit, setEditData, setEditId }: any) => {
   console.log({ data }, "data in edit Handler");
@@ -75,13 +75,7 @@ const EditProtocol = ({ data, setIsEdit, setEditData, setEditId }: any) => {
 
   // const encoder = useEncode();
   // const methodName = data.name.toLowerCase();
-  const {
-    encodeData,
-    setEncodeData,
-    savedProtocols,
-    setSavedProtocols,
-    setExchageItems,
-  } = useContext(ExchangerContext);
+  const { savedProtocols, setSavedProtocols } = useProtocolContext();
 
   const exactMock = useExecMock();
 

@@ -6,19 +6,17 @@ import {
   FaExclamation,
   FaTrash,
 } from "react-icons/fa";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import EditProtocol from "../EditProtocols/EditProtocol";
-import { ExchangerContext } from "../../layout/Create/Index";
 import { Icon } from "@iconify/react";
-import { chain } from "wagmi";
+import useProtocolContext from "../../hooks/useProtocolContext";
 
 const SavedProtocols = () => {
   const [editData, setEditData] = useState<any>(null);
   const [isEdit, setIsEdit] = useState<any>();
   const [editId, setEditId] = useState<any>();
 
-  const { savedProtocols, setSavedProtocols, myChain } =
-    useContext(ExchangerContext);
+  const { savedProtocols, setSavedProtocols, chainId } = useProtocolContext();
 
   // Edit Handler
   const handleEdit = (
@@ -87,7 +85,7 @@ const SavedProtocols = () => {
                               <div className="chain d-flex align-items-center mb-2">
                                 <Icon
                                   icon={
-                                    function_configs?.tokens[myChain]?.find(
+                                    function_configs?.tokens[chainId]?.find(
                                       ({ symbol }: any) => symbol === token
                                     )?.icon
                                   }
@@ -169,7 +167,7 @@ const SavedProtocols = () => {
                               {/* <p className="token ms-2 mt-1">
                                   {
                                     data?.function_configs.inputs[
-                                      myChain.toString() as string
+                                      myChain
                                     ][index].token
                                   }
                                 </p> */}
@@ -177,7 +175,7 @@ const SavedProtocols = () => {
                             {/* <p className="price ms-2 mt-1">
                                 {
                                   data?.function_configs.inputs[
-                                    myChain.toString() as string
+                                    myChain
                                   ][index].amount
                                 }
                               </p> */}

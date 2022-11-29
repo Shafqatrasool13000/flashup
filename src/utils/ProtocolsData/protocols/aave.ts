@@ -1,14 +1,14 @@
 import { BigNumber } from "ethers";
 import { aavaMainTokens, aavaTestTokens } from "../tokens/aava";
 
-export const aave2 = [
+const aave2 = [
   {
     name: "Deposit",
     methodName: "deposit",
     signature: "",
     description: "",
     tag: [],
-    protocolName: "",
+    protocolName: "Aava 2",
     protocolLogo: "",
     initialData: [{ token: "DAI", amount: "", showTokens: false }],
     function_configs: {
@@ -48,7 +48,7 @@ export const aave2 = [
     signature: "",
     description: "",
     tag: "",
-    protocolName: "",
+    protocolName: "Aava 2",
     protocolLogo: "",
     initialData: [{ token: "USDT", amount: "", showTokens: false }],
     function_configs: {
@@ -79,7 +79,7 @@ export const aave2 = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "",
+    protocolName: "Aava 2",
     protocolLogo: "",
     initialData: [
       {
@@ -135,7 +135,7 @@ export const aave2 = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "",
+    protocolName: "Aava 2",
     protocolLogo: "",
     initialData: [
       {
@@ -192,7 +192,7 @@ export const aave2 = [
     methodName: "flashLoan",
     description: "",
     tag: "",
-    protocolName: "",
+    protocolName: "Aava 2",
     protocolLogo: "",
     initialData: [
       {
@@ -235,7 +235,7 @@ export const aave2 = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "",
+    protocolName: "Aava 2",
     protocolLogo: "",
     initialData: [
       {
@@ -272,7 +272,7 @@ export const aave2 = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "",
+    protocolName: "Aava 2",
     protocolLogo: "",
     initialData: [
       {
@@ -308,7 +308,7 @@ export const aave2 = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "",
+    protocolName: "Aava 2",
     protocolLogo: "",
     initialData: [
       {
@@ -344,7 +344,7 @@ export const aave2 = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "",
+    protocolName: "Aava 2",
     protocolLogo: "",
     initialData: [
       {
@@ -376,3 +376,5 @@ export const aave2 = [
     },
   },
 ];
+
+export default aave2;

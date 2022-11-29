@@ -1,25 +1,24 @@
-import { useContext, useEffect, useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import {
   FaArrowAltCircleLeft,
   FaArrowDown,
-  FaBehanceSquare,
-  FaBitbucket,
+  // FaBehanceSquare,
+  // FaBitbucket,
+  // FaBullseye,
   FaCannabis,
   FaCaretDown,
   FaPlus,
 } from "react-icons/fa";
 import { useExecMock } from "../../hooks/useExecMock";
-import { ExchangerContext } from "../../layout/Create/Index";
 import SelectToken from "../SelectToken/SelectToken";
-import { AddProtocolStyled, RateModeStyled } from "../AddCube/style";
+import { RateModeStyled } from "../AddCube/style";
 import { Spin, Switch } from "antd";
-import { useNetwork, useAccount } from "wagmi";
 import { Icon } from "@iconify/react";
 import { useFormik, FormikProvider, Form, FieldArray } from "formik";
 import * as Yup from "yup";
 import InputField from "../InputField/InputField";
-import { GetBalance } from "../../hooks/GetBalance";
+import { GetBalance } from "../GetBalance/Index";
 import GetLtv from "../../hooks/GetLtv";
 import UseApy from "../../utils/graphql/useApy";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -48,17 +47,33 @@ import {
   parseUnits,
 } from "ethers/lib/utils";
 import useDrainToken from "../../hooks/useDrainToken";
+import useProtocolContext from "../../hooks/useProtocolContext";
+import CustomButton from "../Custom/CustomButton/CustomButton";
+import { primaryColor } from "../Global";
+import AddProtocolStyled from "./style";
+import useAllowance from "../../hooks/useAllowance";
 
 const AddProtocol = ({ data, setAddCubeModal }: any) => {
-  const { address } = useAccount();
   const protocol_id = useId();
-  const { chain } = useNetwork();
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+  const [isApprove, setIsApprove] = useState(false);
+
+  const {
+    userAddress,
+    chainId,
+    savedProtocols,
+    setSavedProtocols,
+    setExchageItems,
+    addCubeModal,
+    exchangeItems,
+  } = useProtocolContext();
+
+  console.log({ isApprove }, "isApprove");
 
   // Initial Values
 
   const initialValues: AddProtocolInitValues = {
-    inputsData: chain?.id && data?.initialData,
+    inputsData: chainId && data?.initialData,
   };
 
   // validate Values
@@ -82,11 +97,11 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
   const approveSwitcher = (methodName: string) => {
     switch (methodName) {
       case "deposit":
-        return getTokenAddress(data, chain?.id, 0, formik);
+        return getTokenAddress(data, chainId, 0, formik);
       case "withdraw":
-        return getATokenAddress(data, chain?.id, formik);
+        return getATokenAddress(data, chainId, formik);
       default:
-        return getTokenAddress(data, chain?.id, 0, formik);
+        return getTokenAddress(data, chainId, 0, formik);
     }
   };
 
@@ -94,7 +109,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
   const executionSwitcher = (methodName: string) => {
     switch (methodName) {
       case "withdraw":
-        return getATokenAddress(data, chain?.id, formik);
+        return getATokenAddress(data, chainId, formik);
       default:
         return null;
     }
@@ -105,22 +120,17 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
   const EthMethodSwitcher = (methodName: string) => {
     switch (methodName) {
       case "repayETH":
-        return address;
+        return userAddress;
       case "withdrawETH":
         return "0xe91D55AB2240594855aBd11b3faAE801Fd4c4687";
       case "borrowETH":
-        return address;
+        return userAddress;
       default:
         return null;
     }
   };
 
   const abiCoder = new AbiCoder();
-  //  get token symbol
-  // const getTokenSymbol=() => {}
-
-  // get amount
-  // const getAmount = () => {};
 
   // Hooks
 
@@ -131,6 +141,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
   const stableToken = useStableToken();
   const variableToken = useVariableToken();
   const drainToken = useDrainToken();
+  const allowance = useAllowance();
 
   // Approve Hanlder
   const approveHandler = () => {
@@ -144,16 +155,16 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
             addresses.proxyMockAddress,
             parseUnits(
               formik.values.inputsData[0].amount.toString(),
-              getTokenDecimals(data, chain?.id, 0, formik)
+              getTokenDecimals(data, chainId, 0, formik)
             ),
-            getStableDebt(data, chain?.id, 0, formik),
-            getTokenDecimals(data, chain?.id, 0, formik)
+            getStableDebt(data, chainId, 0, formik),
+            getTokenDecimals(data, chainId, 0, formik)
           )
         : variableToken(
             addresses.proxyMockAddress,
             formik.values.inputsData[0].amount,
-            getVariableDebt(data, chain?.id, 0, formik),
-            getTokenDecimals(data, chain?.id, 0, formik)
+            getVariableDebt(data, chainId, 0, formik),
+            getTokenDecimals(data, chainId, 0, formik)
           );
     } else {
       approve(
@@ -161,7 +172,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
         addresses.proxyMockAddress,
         parseUnits(
           formik.values.inputsData[0].amount.toString(),
-          getTokenDecimals(data, chain?.id, 0, formik)
+          getTokenDecimals(data, chainId, 0, formik)
         )
       );
     }
@@ -175,10 +186,10 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
   //     return;
   //   }
   //   const result = await transfer(
-  //     getTokenAddress(data, chain?.id, 0, formik),
+  //     getTokenAddress(data, chainId, 0, formik),
   //     addresses.proxyMockAddress,
   //     formik.values.inputsData[0].amount,
-  //     getTokenDecimals(data, chain?.id, 0, formik)
+  //     getTokenDecimals(data, chainId, 0, formik)
   //   );
   //   return result;
   // };
@@ -217,12 +228,12 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
           delete objData["showTokens"];
           return {
             ...objData,
-            token: getTokenAddress(data, chain?.id, 0, formik),
+            token: getTokenAddress(data, chainId, 0, formik),
             amount: parseUnits(
               formik.values.inputsData[index].amount.toString(),
-              getTokenDecimals(data, chain?.id, index, formik)
+              getTokenDecimals(data, chainId, index, formik)
             ),
-            address,
+            userAddress,
           };
         })
       );
@@ -261,11 +272,11 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
     if (data.methodName === "flashLoan") {
       const drainTokenResult = drainToken(
         [addresses.faucet],
-        [getTokenAddress(data, chain?.id, 0, formik)],
+        [getTokenAddress(data, chainId, 0, formik)],
         [
           parseUnits(
             formik.values.inputsData[0].amount.toString(),
-            getTokenDecimals(data, chain?.id, 0, formik)
+            getTokenDecimals(data, chainId, 0, formik)
           ),
         ]
       );
@@ -279,11 +290,11 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
       );
       console.log({ drainTokenResult, encodedAbi });
       const encoded = encoder(addresses.haaveAddress, data.methodName, [
-        [getTokenAddress(data, chain?.id, 0, formik)],
+        [getTokenAddress(data, chainId, 0, formik)],
         [
           parseUnits(
             formik.values.inputsData[0].amount.toString(),
-            getTokenDecimals(data, chain?.id, 0, formik)
+            getTokenDecimals(data, chainId, 0, formik)
           ),
         ],
         [BigNumber.from("0")],
@@ -310,14 +321,12 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
     formik.values.inputsData[0].rateMode?.toNumber()
   );
 
-  const { ltvData } = GetLtv(data?.ltv[chain?.id.toString() as string]);
+  const { ltvData } = GetLtv(data?.ltv[chainId]);
 
-  if (chain?.id) {
+  if (chainId) {
     for (
       let i = 0;
-      i <
-      data?.data?.function_configs?.inputs[chain?.id.toString() as string]
-        .length;
+      i < data?.data?.function_configs?.inputs[chainId].length;
       i++
     ) {
       formik.initialValues.inputsData.push(...data?.initialData);
@@ -326,7 +335,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
   console.log(formik.values, "formik values");
   // console.log({ totalData, ltvData });
   useEffect(() => {
-    if (!loading && chain?.id) {
+    if (!loading && chainId) {
       const finalArray: any = [];
       const objectArray = Object.entries(totalData);
 
@@ -348,22 +357,27 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
   }, [data, formik.values.inputsData[0].token, loading]);
 
   const repayHandler = () => {
-    formik.values.inputsData[0].onBehalfOf = address;
+    formik.values.inputsData[0].onBehalfOf = userAddress;
     return null;
   };
   useEffect(() => {
     if (formik.values.inputsData[0].onBehalfOf) repayHandler();
   }, []);
 
-  const {
-    encodeData,
-    setEncodeData,
-    savedProtocols,
-    setSavedProtocols,
-    setExchageItems,
-    addCubeModal,
-    exchangeItems,
-  } = useContext(ExchangerContext);
+  const getAllowance = (amount: number): void => {
+    setIsApprove(amount > 0 ? true : false);
+  };
+  useEffect(() => {
+    allowance(
+      getTokenAddress(data, chainId, 0, formik),
+      userAddress,
+      addresses.proxyMockAddress,
+      getAllowance
+    );
+  }, [formik.values.inputsData]);
+
+  // console.log(getAllowance(), "allowance in add protocol");
+
   console.log(data.methodName.includes("Eth"), "includes eth");
   return (
     <FormikProvider value={formik}>
@@ -380,7 +394,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
           <div className="d-flex justify-content-center">
             <h6 className="text-center">
               <FaCannabis fontSize={20} className="vertical-align-top" />
-              <span className="ms-2 fs-4"> Aave V2</span>
+              <span className="ms-2 fs-4">{data.protocolName}</span>
             </h6>
           </div>
           <div className="d-flex justify-content-center">
@@ -436,7 +450,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
                                     <Icon
                                       icon={
                                         data?.function_configs.tokens[
-                                          chain?.id as number
+                                          chainId
                                         ]?.find(
                                           ({ symbol }: any) =>
                                             symbol ===
@@ -473,9 +487,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
                                     formik.values.inputsData[index].showTokens
                                   }
                                   tokens={
-                                    data?.function_configs.tokens[
-                                      chain?.id as number
-                                    ]
+                                    data?.function_configs.tokens[chainId]
                                   }
                                   index={index}
                                   name={`inputsData.${index}.token`}
@@ -505,7 +517,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
                                 <GetBalance
                                   token={
                                     data?.function_configs.tokens[
-                                      chain?.id as number
+                                      chainId
                                     ]?.find(
                                       ({ symbol }: any) =>
                                         symbol ===
@@ -514,7 +526,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
                                   }
                                   decimal={getTokenDecimals(
                                     data,
-                                    chain?.id,
+                                    chainId,
                                     0,
                                     formik
                                   )}
@@ -552,7 +564,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
                                         <Icon
                                           icon={
                                             data?.function_configs?.tokens[
-                                              chain?.id.toString() as string
+                                              chainId
                                             ]?.find(
                                               (tokenData: any) =>
                                                 tokenData.symbol ===
@@ -565,7 +577,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
                                           color="white"
                                         />
                                       </span>
-                                      {getATokenSymbol(data, chain?.id, formik)}
+                                      {getATokenSymbol(data, chainId, formik)}
                                     </h6>
                                   </div>
                                 </Col>
@@ -633,27 +645,86 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
             exchangeItems.length || savedProtocols.length ? "d-flex" : "d-none"
           }`}
         >
-          <FaBitbucket
-            className="plus-icon "
+          <div className="me-3">
+            <CustomButton
+              bgcolor={primaryColor}
+              color="white"
+              padding="8px 8px"
+              width="60px"
+              height="60px"
+              type="submit"
+              title="Approve"
+              fontSize="12px"
+              borderRadius="50%"
+              disabled={isApprove}
+              clicked={approveHandler}
+            />
+          </div>
+          {/* <FaBitbucket
+            className=""
             color="white"
             onClick={approveHandler}
             fontSize={26}
-          />
-          <FaPlus
-            className="plus-icon ms-3"
+            title="Approve"
+          /> */}
+
+          <div className="">
+            <CustomButton
+              bgcolor={primaryColor}
+              color="white"
+              padding="8px 8px"
+              width="60px"
+              height="60px"
+              type="submit"
+              title="Add"
+              fontSize="12px"
+              borderRadius="50%"
+              // disabled={
+              // async()=> ( await allowance(
+              //   getTokenAddress(data, chainId, 0, formik),
+              //   userAddress,
+              //   getTokenAddress(data, chainId, 0, formik)
+              // ) > 0)
+              //   ? true
+              //   : false
+              // }
+              clicked={() => {
+                setAddCubeModal(!addCubeModal);
+                setExchageItems([]);
+              }}
+            />
+          </div>
+          {/* <FaPlus
+            className="ms-3"
             color="white"
             onClick={() => {
               setAddCubeModal(!addCubeModal);
               setExchageItems([]);
             }}
             fontSize={26}
-          />
-          <FaBehanceSquare
-            className="plus-icon ms-3"
+            title="Add"
+          /> */}
+          {/* <FaBehanceSquare
+            className="ms-3"
             color="white"
             onClick={executionHandler}
             fontSize={26}
-          />
+            title="Execute"
+          /> */}
+          <div className="ms-3">
+            <CustomButton
+              bgcolor={primaryColor}
+              color="white"
+              padding="8px 8px"
+              width="60px"
+              height="60px"
+              type="submit"
+              title="Execute"
+              fontSize="12px"
+              borderRadius="50%"
+              clicked={executionHandler}
+            />
+          </div>
         </div>
       </div>
     </FormikProvider>

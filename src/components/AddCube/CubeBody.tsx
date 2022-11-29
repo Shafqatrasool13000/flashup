@@ -1,22 +1,22 @@
-import React, { useContext } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import HeadBar from "./HeadBar";
 import { protocolsData } from "../../utils/ProtocolsData/ProtocolsData";
 import { CubeBodyStyled } from "./style";
-import { ExchangerContext } from "../../layout/Create/Index";
+import useProtocolContext from "../../hooks/useProtocolContext";
 
 const CubeBody: React.FC<any> = () => {
-  const { getExchangeBox } = useContext(ExchangerContext);
+  const { getExchangeBox } = useProtocolContext();
+
   return (
     <CubeBodyStyled>
       <Container>
-        <h6 className="title">New Cube</h6>
+        <h6 className="title text-center fs-4">New Cube</h6>
         <div className="exchangers">
           {protocolsData.map(({ title, exchanger }, index) => (
             <div key={index}>
               <HeadBar title={title} />
               <Row key={index} className="method">
-                {exchanger.map((data, index) => (
+                {exchanger.map((data: any, index: number) => (
                   <Col key={index} sm={6} md={3}>
                     <button
                       onClick={() => getExchangeBox(data)}

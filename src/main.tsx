@@ -10,6 +10,7 @@ import "antd/dist/antd.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import Notify from "bnc-notify";
+import ProtocolsContextProvider from "./utils/context/ProtocolContext";
 
 // Notify dapp Connect
 export const notify = Notify({
@@ -38,7 +39,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <WagmiConfig client={client}>
         <ConnectKitProvider>
           <ApolloProvider client={apolloClient}>
-            <App />
+            <ProtocolsContextProvider>
+              <App />
+            </ProtocolsContextProvider>
           </ApolloProvider>
         </ConnectKitProvider>
       </WagmiConfig>
