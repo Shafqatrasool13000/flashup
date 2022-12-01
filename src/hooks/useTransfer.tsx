@@ -1,8 +1,7 @@
 import { useCallback } from "react";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import erc20Abi from "../utils/abi/erc20.json";
 import useSigner from "./useSigner";
-import { parseUnits } from "ethers/lib/utils";
 
 const useTransfer = () => {
   const signer = useSigner();
@@ -11,22 +10,14 @@ const useTransfer = () => {
     async (
       token: string,
       recepient: string,
-      amount: string,
-      decimals: number
+      amount: BigNumber
     ): Promise<void> => {
-      console.log(
-        parseUnits(`${amount}`, decimals).toNumber(),
-        amount,
-        "value i..."
-      );
+      console.log(amount, "useTrnasfer params...");
       if (signer !== undefined) {
         const contract = new ethers.Contract(token, erc20Abi, signer);
         try {
           console.log(signer, "signer in transfer");
-          const tx = await contract.transfer(
-            recepient,
-            parseUnits(`${amount}`, decimals).toNumber()
-          );
+          const tx = await contract.transfer(recepient, amount);
           console.log(tx, "data in tex");
           await tx.wait();
           return tx;

@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import { useCallback } from "react";
 import { IVariableDebtToken } from "../typechain";
-import { variableTokenHandler } from "../utils/contracts";
+import { variableTokenHandler } from "../contracts/Aava";
 import useSigner from "./useSigner";
 
 const useVariableToken = () => {

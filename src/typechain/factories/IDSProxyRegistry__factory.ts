@@ -27,6 +27,25 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "build",
+    outputs: [
+      {
+        internalType: "contract IDSProxy",
+        name: "proxy",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "input",
         type: "address",
       },

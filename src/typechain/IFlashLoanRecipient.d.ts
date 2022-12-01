@@ -21,16 +21,16 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface IFlashLoanRecipientInterface extends ethers.utils.Interface {
   functions: {
-    "receiveFlashLoan(address[],uint256[],uint256[],bytes)": FunctionFragment;
+    "onFlashLoan(address,address,uint256,uint256,bytes)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "receiveFlashLoan",
-    values: [string[], BigNumberish[], BigNumberish[], BytesLike]
+    functionFragment: "onFlashLoan",
+    values: [string, string, BigNumberish, BigNumberish, BytesLike]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "receiveFlashLoan",
+    functionFragment: "onFlashLoan",
     data: BytesLike
   ): Result;
 
@@ -81,29 +81,32 @@ export class IFlashLoanRecipient extends BaseContract {
   interface: IFlashLoanRecipientInterface;
 
   functions: {
-    receiveFlashLoan(
-      tokens: string[],
-      amounts: BigNumberish[],
-      feeAmounts: BigNumberish[],
-      userData: BytesLike,
+    onFlashLoan(
+      caller: string,
+      erc20Token: string,
+      amount: BigNumberish,
+      feeAmount: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  receiveFlashLoan(
-    tokens: string[],
-    amounts: BigNumberish[],
-    feeAmounts: BigNumberish[],
-    userData: BytesLike,
+  onFlashLoan(
+    caller: string,
+    erc20Token: string,
+    amount: BigNumberish,
+    feeAmount: BigNumberish,
+    data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    receiveFlashLoan(
-      tokens: string[],
-      amounts: BigNumberish[],
-      feeAmounts: BigNumberish[],
-      userData: BytesLike,
+    onFlashLoan(
+      caller: string,
+      erc20Token: string,
+      amount: BigNumberish,
+      feeAmount: BigNumberish,
+      data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -111,21 +114,23 @@ export class IFlashLoanRecipient extends BaseContract {
   filters: {};
 
   estimateGas: {
-    receiveFlashLoan(
-      tokens: string[],
-      amounts: BigNumberish[],
-      feeAmounts: BigNumberish[],
-      userData: BytesLike,
+    onFlashLoan(
+      caller: string,
+      erc20Token: string,
+      amount: BigNumberish,
+      feeAmount: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    receiveFlashLoan(
-      tokens: string[],
-      amounts: BigNumberish[],
-      feeAmounts: BigNumberish[],
-      userData: BytesLike,
+    onFlashLoan(
+      caller: string,
+      erc20Token: string,
+      amount: BigNumberish,
+      feeAmount: BigNumberish,
+      data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

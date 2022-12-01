@@ -9,6 +9,7 @@ export type ButtonProps = {
   width: string;
   color: string;
   padding: string;
+  margin?: string;
   clicked?: () => void;
   form?: any;
   key?: string | number;

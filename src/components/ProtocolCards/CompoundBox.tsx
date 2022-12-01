@@ -22,7 +22,7 @@ import { GetBalance } from "../GetBalance/Index";
 import GetLtv from "../../hooks/GetLtv";
 import UseApy from "../../utils/graphql/useApy";
 import { LoadingOutlined } from "@ant-design/icons";
-import { addresses } from "../../utils/constants";
+import contractsAddress from "../../utils/contractsAddress";
 import { useEncode } from "../../hooks/useEncode";
 import useApprove from "../../hooks/useApprove";
 import { AddProtocolInitValues } from "../../utils/types";
@@ -52,11 +52,16 @@ import CustomButton from "../Custom/CustomButton/CustomButton";
 import { primaryColor } from "../Global";
 import AddProtocolStyled from "./style";
 import useAllowance from "../../hooks/useAllowance";
+import useIDSProxy from "../../hooks/useIDSProxyRegistry";
+import CustomModal from "../Custom/Modal/CustomModal";
+import CheckUserProxy from "../Custom/CheckUserProxy/Index";
 
-const AddProtocol = ({ data, setAddCubeModal }: any) => {
+const CompoundBox = ({ data, setAddCubeModal }: any) => {
   const protocol_id = useId();
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
   const [isApprove, setIsApprove] = useState(false);
+  const [isUserProxyModal, setIsUserProxyModal] = useState(false);
+  // const [isModalVisib, setIsModalVisible] = useState(false);
 
   const {
     userAddress,
@@ -142,115 +147,97 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
   const variableToken = useVariableToken();
   const drainToken = useDrainToken();
   const allowance = useAllowance();
+  const idsProxy = useIDSProxy();
 
   // Approve Hanlder
-  const approveHandler = () => {
-    // if (Object.keys(formik.errors).length !== 0) {
-    //   (() => toast("plz fill all fields"))();
-    //   return;
-    // }
-    if (formik.values.inputsData[0].rateMode) {
-      formik.values.inputsData[0].rateMode.toNumber() === 1
-        ? stableToken(
-            addresses.proxyMockAddress,
-            parseUnits(
-              formik.values.inputsData[0].amount.toString(),
-              getTokenDecimals(data, chainId, 0, formik)
-            ),
-            getStableDebt(data, chainId, 0, formik),
-            getTokenDecimals(data, chainId, 0, formik)
-          )
-        : variableToken(
-            addresses.proxyMockAddress,
-            formik.values.inputsData[0].amount,
-            getVariableDebt(data, chainId, 0, formik),
-            getTokenDecimals(data, chainId, 0, formik)
-          );
-    } else {
-      approve(
-        approveSwitcher(data.methodName),
-        addresses.proxyMockAddress,
-        parseUnits(
-          formik.values.inputsData[0].amount.toString(),
-          getTokenDecimals(data, chainId, 0, formik)
-        )
-      );
-    }
-  };
-
-  // // Transfer Handler
-
-  // const transferHandler = async () => {
-  //   if (Object.keys(formik.errors).length !== 0) {
-  //     (() => toast("plz fill all fields"))();
-  //     return;
+  // const approveHandler = () => {
+  //   // if (Object.keys(formik.errors).length !== 0) {
+  //   //   (() => toast("plz fill all fields"))();
+  //   //   return;
+  //   // }
+  //   if (formik.values.inputsData[0].rateMode) {
+  //     formik.values.inputsData[0].rateMode.toNumber() === 1
+  //       ? stableToken(
+  //           contractsAddress.proxyMockAddress,
+  //           parseUnits(
+  //             formik.values.inputsData[0].amount.toString(),
+  //             getTokenDecimals(data, chainId, 0, formik)
+  //           ),
+  //           getStableDebt(data, chainId, 0, formik),
+  //           getTokenDecimals(data, chainId, 0, formik)
+  //         )
+  //       : variableToken(
+  //           contractsAddress.proxyMockAddress,
+  //           formik.values.inputsData[0].amount,
+  //           getVariableDebt(data, chainId, 0, formik),
+  //           getTokenDecimals(data, chainId, 0, formik)
+  //         );
+  //   } else {
+  //     approve(
+  //       approveSwitcher(data.methodName),
+  //       contractsAddress.proxyMockAddress,
+  //       parseUnits(
+  //         formik.values.inputsData[0].amount.toString(),
+  //         getTokenDecimals(data, chainId, 0, formik)
+  //       )
+  //     );
   //   }
-  //   const result = await transfer(
-  //     getTokenAddress(data, chainId, 0, formik),
-  //     addresses.proxyMockAddress,
-  //     formik.values.inputsData[0].amount,
-  //     getTokenDecimals(data, chainId, 0, formik)
-  //   );
-  //   return result;
   // };
 
-  // Execution Handler
+  // Transfer Handler
+  const transferHandler = async () => {
+    if (Object.keys(formik.errors).length !== 0) {
+      (() => toast("plz fill all fields"))();
+      return;
+    }
+    const result = await transfer(
+      getTokenAddress(data, chainId, 0, formik),
+      contractsAddress.proxyMockAddress,
+      parseUnits(
+        formik.values.inputsData[0].amount.toString(),
+        getTokenDecimals(data, chainId, 0, formik)
+      )
+    );
+    return result;
+  };
 
+  // Execution Handler
   const executionHandler = async () => {
+    console.log({ setIsUserProxyModal });
+    const userProxyAddress = await idsProxy(userAddress, setIsUserProxyModal);
+    console.log({ userProxyAddress });
     let finalProtcoloData: any;
-    if (data.methodName.includes("ETH")) {
-      finalProtcoloData = Object.values(
-        formik.values.inputsData.map((objData: any, index: number) => {
-          delete objData["showTokens"];
-          return {
-            ...objData,
-            amount: parseEther(
-              formik.values.inputsData[index].amount.toString()
-            ),
-          };
-        })
-      );
-      EthMethodSwitcher(data.methodName) &&
-        (finalProtcoloData[0]["others"] = EthMethodSwitcher(data.methodName));
-      var encoded = encoder(addresses.haaveAddress, data.methodName, [
-        ...Object.values(finalProtcoloData[0]),
-      ]);
-      console.log({ finalProtcoloData });
-      console.log({ encoded });
-      execMock(
-        addresses.haaveAddress,
-        encoded,
-        formik.values.inputsData[0].amount
-      );
+    if (data.methodName === "withdraw") {
     } else {
       finalProtcoloData = Object.values(
         formik.values.inputsData.map((objData: any, index: number) => {
           delete objData["showTokens"];
           return {
-            ...objData,
+            userProxy: userProxyAddress,
             token: getTokenAddress(data, chainId, 0, formik),
             amount: parseUnits(
               formik.values.inputsData[index].amount.toString(),
               getTokenDecimals(data, chainId, index, formik)
             ),
-            userAddress,
           };
         })
       );
       console.log({ finalProtcoloData }, "at inital");
-      executionSwitcher(data.methodName) &&
-        (finalProtcoloData[0]["exec"] = executionSwitcher(data.methodName));
-      var encoded = encoder(addresses.haaveAddress, data.methodName, [
-        ...Object.values(finalProtcoloData[0]),
-      ]);
-      execMock(addresses.haaveAddress, encoded);
+      // executionSwitcher(data.methodName) &&
+      //   (finalProtcoloData[0]["exec"] = executionSwitcher(data.methodName));
+      var encoded = encoder(
+        contractsAddress.hsCompondAddress,
+        data.methodName,
+        [...Object.values(finalProtcoloData[0])]
+      );
+      execMock(contractsAddress.hsCompondAddress, encoded);
 
       console.log({ finalProtcoloData });
     }
 
     // console.log({ finalProtcoloData });
 
-    // const encoded = encoder(addresses.haaveAddress, "withdrawETH", [
+    // const encoded = encoder(contractsAddress.haaveAddress, "withdrawETH", [
     //   parseEther("0.1"),
     //   "0x22404B0e2a7067068AcdaDd8f9D586F834cCe2c5",
     // ]);
@@ -271,7 +258,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
     setExchageItems([]);
     if (data.methodName === "flashLoan") {
       const drainTokenResult = drainToken(
-        [addresses.faucet],
+        [contractsAddress.faucet],
         [getTokenAddress(data, chainId, 0, formik)],
         [
           parseUnits(
@@ -283,13 +270,13 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
       const encodedAbi = abiCoder.encode(
         ["address[]", "bytes32[]", "bytes[]"],
         [
-          [addresses.hMock],
+          [contractsAddress.hMock],
           [formatBytes32String("")],
           [drainTokenResult as BytesLike],
         ]
       );
       console.log({ drainTokenResult, encodedAbi });
-      const encoded = encoder(addresses.haaveAddress, data.methodName, [
+      const encoded = encoder(contractsAddress.haaveAddress, data.methodName, [
         [getTokenAddress(data, chainId, 0, formik)],
         [
           parseUnits(
@@ -302,7 +289,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
       ]);
       console.log({ encoded }, "finalEncodedData data ...");
 
-      execMock(addresses.haaveAddress, encoded);
+      execMock(contractsAddress.haaveAddress, encoded);
     } else {
       return;
     }
@@ -364,15 +351,11 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
     if (formik.values.inputsData[0].onBehalfOf) repayHandler();
   }, []);
 
-  const getAllowance = (amount: number): void => {
-    setIsApprove(amount > 0 ? true : false);
-  };
   useEffect(() => {
     allowance(
       getTokenAddress(data, chainId, 0, formik),
       userAddress,
-      addresses.proxyMockAddress,
-      getAllowance
+      contractsAddress.proxyMockAddress
     );
   }, [formik.values.inputsData]);
 
@@ -391,6 +374,12 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
             className="back-icon"
             fontSize={26}
           />
+          <CustomModal
+            isModalVisible={isUserProxyModal}
+            setIsModalVisible={setIsUserProxyModal}
+          >
+            <CheckUserProxy setIsModalVisible={setIsUserProxyModal} />
+          </CustomModal>
           <div className="d-flex justify-content-center">
             <h6 className="text-center">
               <FaCannabis fontSize={20} className="vertical-align-top" />
@@ -657,7 +646,7 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
               fontSize="12px"
               borderRadius="50%"
               disabled={isApprove}
-              clicked={approveHandler}
+              clicked={transferHandler}
             />
           </div>
           {/* <FaBitbucket
@@ -731,4 +720,4 @@ const AddProtocol = ({ data, setAddCubeModal }: any) => {
   );
 };
 
-export default AddProtocol;
+export default CompoundBox;

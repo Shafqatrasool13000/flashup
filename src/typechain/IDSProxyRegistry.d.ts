@@ -78,21 +78,33 @@ export class IDSProxyRegistry extends BaseContract {
   interface: IDSProxyRegistryInterface;
 
   functions: {
-    build(
+    "build()"(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "build(address)"(
+      owner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     proxies(input: string, overrides?: CallOverrides): Promise<[string]>;
   };
 
-  build(
+  "build()"(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "build(address)"(
+    owner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   proxies(input: string, overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
-    build(overrides?: CallOverrides): Promise<string>;
+    "build()"(overrides?: CallOverrides): Promise<string>;
+
+    "build(address)"(owner: string, overrides?: CallOverrides): Promise<string>;
 
     proxies(input: string, overrides?: CallOverrides): Promise<string>;
   };
@@ -100,7 +112,12 @@ export class IDSProxyRegistry extends BaseContract {
   filters: {};
 
   estimateGas: {
-    build(
+    "build()"(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "build(address)"(
+      owner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -108,7 +125,12 @@ export class IDSProxyRegistry extends BaseContract {
   };
 
   populateTransaction: {
-    build(
+    "build()"(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "build(address)"(
+      owner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

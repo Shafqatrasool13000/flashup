@@ -1,26 +1,10 @@
 import { createContext, useEffect, useState } from "react";
 import { useAccount, useNetwork } from "wagmi";
-import AddProtocol from "../../components/AddProtocol/AddProtocol";
+import AavaBox from "../../components/ProtocolCards/AavaBox";
+import CompoundBox from "../../components/ProtocolCards/CompoundBox";
 import { Exchange_Items } from "../types";
+import { Context_Api_Data, ProtocolContextProps } from "./types";
 
-type Context_Api_Data = {
-  encodeData: any;
-  setEncodeData: any;
-  savedProtocols: any;
-  setSavedProtocols: any;
-  exchangeItems: any;
-  setExchageItems: any;
-  chainId: string;
-  setChainId: React.Dispatch<React.SetStateAction<string>>;
-  userAddress: string;
-  getExchangeBox: any;
-  addCubeModal: any;
-  setAddCubeModal: any;
-};
-
-type ProtocolContextProps = {
-  children: React.ReactNode;
-};
 export const ProtocolContextData = createContext<Context_Api_Data>(
   {} as Context_Api_Data
 );
@@ -44,17 +28,22 @@ const ProtocolsContextProvider: React.FC<ProtocolContextProps> = ({
     setUserAddress(address as string);
   }, [chain?.id, address]);
 
-  const getExchangeBox = (data: any) => {
-    const nameConversion = data.name.toLowerCase();
-    console.log(nameConversion.includes("swap"));
-    if (nameConversion.includes("swap")) {
-      setExchageItems([...exchangeItems, { Component: AddProtocol, data }]);
-      setAddCubeModal(false);
-    } else {
-      setExchageItems([...exchangeItems, { Component: AddProtocol, data }]);
-      setAddCubeModal(false);
+  const toggleProtocoInputlBox = (data: any) => {
+    switch (data.protocolName) {
+      case "Aava 2":
+        setExchageItems([...exchangeItems, { Component: AavaBox, data }]);
+        break;
+      case "Compound":
+        setExchageItems([...exchangeItems, { Component: CompoundBox, data }]);
+        break;
+
+      default:
+        setExchageItems([...exchangeItems, { Component: AavaBox, data }]);
+        break;
     }
+    setAddCubeModal(false);
   };
+
   const data = {
     encodeData,
     setEncodeData,
@@ -64,10 +53,12 @@ const ProtocolsContextProvider: React.FC<ProtocolContextProps> = ({
     setExchageItems,
     chainId,
     setChainId,
-    getExchangeBox,
+    // getExchangeBox,
+    toggleProtocoInputlBox,
     addCubeModal,
     setAddCubeModal,
     userAddress,
+    setUserAddress,
   };
 
   return (

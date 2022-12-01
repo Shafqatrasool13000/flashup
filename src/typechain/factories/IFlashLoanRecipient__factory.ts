@@ -13,27 +13,32 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "contract IERC20[]",
-        name: "tokens",
-        type: "address[]",
+        internalType: "address",
+        name: "caller",
+        type: "address",
       },
       {
-        internalType: "uint256[]",
-        name: "amounts",
-        type: "uint256[]",
+        internalType: "contract IERC20",
+        name: "erc20Token",
+        type: "address",
       },
       {
-        internalType: "uint256[]",
-        name: "feeAmounts",
-        type: "uint256[]",
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "feeAmount",
+        type: "uint256",
       },
       {
         internalType: "bytes",
-        name: "userData",
+        name: "data",
         type: "bytes",
       },
     ],
-    name: "receiveFlashLoan",
+    name: "onFlashLoan",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

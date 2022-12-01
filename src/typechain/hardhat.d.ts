@@ -13,6 +13,14 @@ import * as Contracts from ".";
 declare module "hardhat/types/runtime" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
     getContractFactory(
+      name: "IAccessControlEnumerableUpgradeable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IAccessControlEnumerableUpgradeable__factory>;
+    getContractFactory(
+      name: "IAccessControlUpgradeable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IAccessControlUpgradeable__factory>;
+    getContractFactory(
       name: "Ownable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Ownable__factory>;
@@ -108,6 +116,50 @@ declare module "hardhat/types/runtime" {
       name: "TestToken",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TestToken__factory>;
+    getContractFactory(
+      name: "HBancor",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.HBancor__factory>;
+    getContractFactory(
+      name: "IBancorNetwork",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IBancorNetwork__factory>;
+    getContractFactory(
+      name: "IFlashLoanRecipient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IFlashLoanRecipient__factory>;
+    getContractFactory(
+      name: "IOwned",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IOwned__factory>;
+    getContractFactory(
+      name: "IPoolCollection",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPoolCollection__factory>;
+    getContractFactory(
+      name: "IPoolToken",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPoolToken__factory>;
+    getContractFactory(
+      name: "IUpgradeable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IUpgradeable__factory>;
+    getContractFactory(
+      name: "IVersioned",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IVersioned__factory>;
+    getContractFactory(
+      name: "MathEx",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MathEx__factory>;
+    getContractFactory(
+      name: "TestFlashLoanRecipient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TestFlashLoanRecipient__factory>;
+    getContractFactory(
+      name: "TokenLibrary",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TokenLibrary__factory>;
     getContractFactory(
       name: "FCompoundActions",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -378,6 +430,16 @@ declare module "hardhat/types/runtime" {
     ): Promise<Contracts.Storage__factory>;
 
     getContractAt(
+      name: "IAccessControlEnumerableUpgradeable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IAccessControlEnumerableUpgradeable>;
+    getContractAt(
+      name: "IAccessControlUpgradeable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IAccessControlUpgradeable>;
+    getContractAt(
       name: "Ownable",
       address: string,
       signer?: ethers.Signer
@@ -497,6 +559,61 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.TestToken>;
+    getContractAt(
+      name: "HBancor",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.HBancor>;
+    getContractAt(
+      name: "IBancorNetwork",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IBancorNetwork>;
+    getContractAt(
+      name: "IFlashLoanRecipient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IFlashLoanRecipient>;
+    getContractAt(
+      name: "IOwned",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IOwned>;
+    getContractAt(
+      name: "IPoolCollection",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPoolCollection>;
+    getContractAt(
+      name: "IPoolToken",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPoolToken>;
+    getContractAt(
+      name: "IUpgradeable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IUpgradeable>;
+    getContractAt(
+      name: "IVersioned",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IVersioned>;
+    getContractAt(
+      name: "MathEx",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MathEx>;
+    getContractAt(
+      name: "TestFlashLoanRecipient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TestFlashLoanRecipient>;
+    getContractAt(
+      name: "TokenLibrary",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TokenLibrary>;
     getContractAt(
       name: "FCompoundActions",
       address: string,

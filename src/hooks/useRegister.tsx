@@ -1,7 +1,7 @@
 import { parseEther } from "ethers/lib/utils";
 import { useCallback } from "react";
 import { Registry } from "../typechain";
-import { registerHandler } from "../utils/contracts";
+import { registerHandler } from "../utils/contractsLoader";
 import useSigner from "./useSigner";
 
 export const useRegister = () => {

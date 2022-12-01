@@ -22,9 +22,9 @@ export type Encode_Data = {
 
 export type Exchange_Items = { Component: React.ComponentType; data: {} }[];
 
-export type CubeBodyProps = {
-  getExchangeBox: (data: {}) => void;
-};
+// export type CubeBodyProps = {
+//   getExchangeBox: (data: {}) => void;
+// };
 
 export type SelectTokenProps = {
   showTokens: boolean;

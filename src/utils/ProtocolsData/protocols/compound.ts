@@ -9,7 +9,6 @@ const compound = [
     description: "",
     tag: [],
     protocolName: "Compound",
-
     protocolLogo: "",
     initialData: [{ token: "DAI", amount: "", showTokens: false }],
     function_configs: {
@@ -50,9 +49,8 @@ const compound = [
     description: "",
     tag: "",
     protocolName: "Compound",
-
     protocolLogo: "",
-    initialData: [{ token: "USDT", amount: "", showTokens: false }],
+    initialData: [{ token: "DAI", amount: "", showTokens: false }],
     function_configs: {
       tokens: {
         "1": aavaMainTokens,
@@ -82,11 +80,10 @@ const compound = [
     description: "",
     tag: "",
     protocolName: "Compound",
-
     protocolLogo: "",
     initialData: [
       {
-        token: "USDT",
+        token: "DAI",
         amount: "",
         showTokens: false,
         rateMode: BigNumber.from(2),
@@ -139,11 +136,67 @@ const compound = [
     description: "",
     tag: "",
     protocolName: "Compound",
-
     protocolLogo: "",
     initialData: [
       {
-        token: "USDT",
+        token: "DAI",
+        amount: "",
+        showTokens: false,
+        rateMode: BigNumber.from(2),
+        // onBehalfOf: +true,
+      },
+    ],
+    function_configs: {
+      tokens: {
+        "1": aavaMainTokens,
+        "5": aavaTestTokens,
+      },
+      outputs: [],
+    },
+    attributes: [
+      {
+        name: "ETH Debt",
+        value: 234,
+      },
+      {
+        name: "Total Debt",
+        value: 234,
+      },
+      {
+        name: "Total Collatrel",
+        value: 234,
+      },
+      {
+        name: "Utilization",
+        value: 234,
+      },
+    ],
+    protocol_configs: {
+      tokenlist: [],
+      fee: 12,
+      prices: 12,
+    },
+    pool: {
+      name: "",
+      pool_address: "",
+      pool_apy: "",
+    },
+    ltv: {
+      "1": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+      "5": "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
+    },
+  },
+  {
+    name: "Create User Proxy",
+    methodName: "User Proxy",
+    signature: () => console.log(""),
+    description: "",
+    tag: "",
+    protocolName: "Compound",
+    protocolLogo: "",
+    initialData: [
+      {
+        token: "DAI",
         amount: "",
         showTokens: false,
         rateMode: BigNumber.from(2),

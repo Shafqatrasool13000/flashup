@@ -21,10 +21,6 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface HSCompoundInterface extends ethers.utils.Interface {
   functions: {
-    "CETH_ADDRESS()": FunctionFragment;
-    "COMPTROLLER()": FunctionFragment;
-    "COMP_ADDRESS()": FunctionFragment;
-    "FCOMPOUND_ACTIONS()": FunctionFragment;
     "MSG_SENDER_KEY()": FunctionFragment;
     "NATIVE_TOKEN_ADDRESS()": FunctionFragment;
     "PERCENTAGE_BASE()": FunctionFragment;
@@ -43,22 +39,6 @@ interface HSCompoundInterface extends ethers.utils.Interface {
     "withdraw(address,address,uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "CETH_ADDRESS",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "COMPTROLLER",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "COMP_ADDRESS",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "FCOMPOUND_ACTIONS",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "MSG_SENDER_KEY",
     values?: undefined
@@ -115,22 +95,6 @@ interface HSCompoundInterface extends ethers.utils.Interface {
     values: [string, string, BigNumberish]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "CETH_ADDRESS",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "COMPTROLLER",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "COMP_ADDRESS",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "FCOMPOUND_ACTIONS",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "MSG_SENDER_KEY",
     data: BytesLike
@@ -222,14 +186,6 @@ export class HSCompound extends BaseContract {
   interface: HSCompoundInterface;
 
   functions: {
-    CETH_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
-
-    COMPTROLLER(overrides?: CallOverrides): Promise<[string]>;
-
-    COMP_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
-
-    FCOMPOUND_ACTIONS(overrides?: CallOverrides): Promise<[string]>;
-
     MSG_SENDER_KEY(overrides?: CallOverrides): Promise<[string]>;
 
     NATIVE_TOKEN_ADDRESS(overrides?: CallOverrides): Promise<[string]>;
@@ -304,14 +260,6 @@ export class HSCompound extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  CETH_ADDRESS(overrides?: CallOverrides): Promise<string>;
-
-  COMPTROLLER(overrides?: CallOverrides): Promise<string>;
-
-  COMP_ADDRESS(overrides?: CallOverrides): Promise<string>;
-
-  FCOMPOUND_ACTIONS(overrides?: CallOverrides): Promise<string>;
 
   MSG_SENDER_KEY(overrides?: CallOverrides): Promise<string>;
 
@@ -388,14 +336,6 @@ export class HSCompound extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    CETH_ADDRESS(overrides?: CallOverrides): Promise<string>;
-
-    COMPTROLLER(overrides?: CallOverrides): Promise<string>;
-
-    COMP_ADDRESS(overrides?: CallOverrides): Promise<string>;
-
-    FCOMPOUND_ACTIONS(overrides?: CallOverrides): Promise<string>;
-
     MSG_SENDER_KEY(overrides?: CallOverrides): Promise<string>;
 
     NATIVE_TOKEN_ADDRESS(overrides?: CallOverrides): Promise<string>;
@@ -469,14 +409,6 @@ export class HSCompound extends BaseContract {
   filters: {};
 
   estimateGas: {
-    CETH_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
-
-    COMPTROLLER(overrides?: CallOverrides): Promise<BigNumber>;
-
-    COMP_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
-
-    FCOMPOUND_ACTIONS(overrides?: CallOverrides): Promise<BigNumber>;
-
     MSG_SENDER_KEY(overrides?: CallOverrides): Promise<BigNumber>;
 
     NATIVE_TOKEN_ADDRESS(overrides?: CallOverrides): Promise<BigNumber>;
@@ -553,14 +485,6 @@ export class HSCompound extends BaseContract {
   };
 
   populateTransaction: {
-    CETH_ADDRESS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    COMPTROLLER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    COMP_ADDRESS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    FCOMPOUND_ACTIONS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     MSG_SENDER_KEY(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     NATIVE_TOKEN_ADDRESS(

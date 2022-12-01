@@ -1,8 +1,6 @@
-import { parseEther } from "ethers/lib/utils";
 import { useCallback } from "react";
 import { HMock } from "../typechain";
-import { addresses } from "../utils/constants";
-import { drainTokenHandler } from "../utils/contracts";
+import { drainTokenHandler } from "../contracts/Aava";
 import useSigner from "./useSigner";
 
 const useDrainToken = () => {

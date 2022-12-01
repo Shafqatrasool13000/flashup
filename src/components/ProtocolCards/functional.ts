@@ -61,7 +61,7 @@ export const getVariableDebt = (
   index: number,
   formik: any
 ) => {
-  const address = data.function_configs.tokens[chain as number].find(
+  const address = data.function_configs.tokens[chain].find(
     ({ symbol }: any) => symbol === formik.values.inputsData[index].token
   ).variableDebtTokenAddress;
   return address;

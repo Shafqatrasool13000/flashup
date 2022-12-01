@@ -1,12 +1,10 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { FaPlus } from "react-icons/fa";
 import Create from "../../components/Create/Index";
 import { CreateLayoutStyled } from "./style";
 import AddCube from "../../components/AddCube/Index";
 import CubeBody from "../../components/AddCube/CubeBody";
 import { Col, Container, Row } from "react-bootstrap";
-
-import { Encode_Data } from "../../utils/types";
 import SavedProtocols from "../../components/SavedProtocols/SavedProtocols";
 import useProtocolContext from "../../hooks/useProtocolContext";
 
@@ -17,7 +15,6 @@ const Index = () => {
     savedProtocols,
     exchangeItems,
     setExchageItems,
-    getExchangeBox,
     addCubeModal,
     setAddCubeModal,
   } = useProtocolContext();
@@ -114,7 +111,7 @@ const Index = () => {
           </Row>
         </Container>
         <AddCube addCubeModal={addCubeModal} setAddCubeModal={setAddCubeModal}>
-          <CubeBody getExchangeBox={getExchangeBox} />
+          <CubeBody />
         </AddCube>
       </CreateLayoutStyled>
     </>

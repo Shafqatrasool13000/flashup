@@ -1,8 +1,7 @@
-import { BigNumber } from "ethers";
-import { arrayify, Bytes, parseEther } from "ethers/lib/utils";
+import { arrayify, parseEther } from "ethers/lib/utils";
 import { useCallback } from "react";
+import { proxyMockHandler } from "../contracts/Aava";
 import { ProxyMock } from "../typechain";
-import { proxyMockHandler } from "../utils/contracts";
 import useSigner from "./useSigner";
 
 export const useExecMock = () => {
@@ -20,7 +19,7 @@ export const useExecMock = () => {
 
         let contract: ProxyMock = proxyMockHandler(signer);
         try {
-          const tx = await contract.callStatic.execMock(to, arrayify(data), {
+          const tx = await contract.execMock(to, arrayify(data), {
             value: parseEther(amount ? amount.toString() : "0"),
           });
           console.log(tx);

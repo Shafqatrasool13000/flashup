@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { loaders } from "../utils/contracts";
+import { loaders } from "../utils/contractsLoader";
 import useSigner from "./useSigner";
 import { HAaveProtocol } from "../typechain";
 

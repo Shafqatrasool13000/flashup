@@ -4,15 +4,16 @@ import { InputFieldStyled } from "./style";
 const InputField = (props: any) => {
   const [field, meta] = useField(props);
   const showFeedback = meta.touched;
+  const { textAlign, ...rest } = props;
   // console.log(meta.error, "field error .....");
 
   return (
-    <InputFieldStyled textAlign={props.textAlign}>
+    <InputFieldStyled textAlign={textAlign}>
       <input
         className={`form-control ${
           showFeedback ? (meta.error ? "is-invalid invalid" : "valid") : ""
         }`}
-        {...props}
+        {...rest}
         {...field}
       />
       {/* <div className="form-group col-6">

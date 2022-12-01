@@ -1,5 +1,6 @@
+import { parseEther } from "ethers/lib/utils";
 import { useCallback } from "react";
-import { loaders } from "../utils/contracts";
+import contractsLoader from "../utils/contractsLoader";
 import useSigner from "./useSigner";
 
 export const useEncode = () => {
@@ -16,8 +17,17 @@ export const useEncode = () => {
           params,
           "data in encode params"
         );
-        const contract = loaders[address](signer);
-        return contract.interface.encodeFunctionData(functionName, params);
+        console.log(parseEther("1"));
+        const contract = contractsLoader[address](signer);
+        return contract.interface.encodeFunctionData(
+          functionName,
+          params
+          //    [
+          //   // "0x887530F92fbeb3FD8f9F53390851D96aA7B9C164",
+          //   // "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33",
+          //   // parseEther("1"),
+          // ]
+        );
       } catch (error) {
         console.log(error);
       }
