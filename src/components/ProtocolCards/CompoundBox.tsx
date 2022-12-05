@@ -27,41 +27,30 @@ import { useEncode } from "../../hooks/useEncode";
 import useApprove from "../../hooks/useApprove";
 import { AddProtocolInitValues } from "../../utils/types";
 import { toast } from "react-toastify";
-import { BigNumber } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import useTransfer from "../../hooks/useTransfer";
-import useStableToken from "../../hooks/useStableToken";
-import useVariableToken from "../../hooks/useVariableToken";
 import {
   getTokenAddress,
   getATokenSymbol,
-  getStableDebt,
   getTokenDecimals,
-  getVariableDebt,
   getATokenAddress,
 } from "./functional";
-import {
-  AbiCoder,
-  BytesLike,
-  formatBytes32String,
-  parseEther,
-  parseUnits,
-} from "ethers/lib/utils";
-import useDrainToken from "../../hooks/useDrainToken";
+import { parseUnits } from "ethers/lib/utils";
 import useProtocolContext from "../../hooks/useProtocolContext";
 import CustomButton from "../Custom/CustomButton/CustomButton";
 import { primaryColor } from "../Global";
 import AddProtocolStyled from "./style";
 import useAllowance from "../../hooks/useAllowance";
-import useIDSProxy from "../../hooks/useIDSProxyRegistry";
+import useIDSProxyRegistry from "../../hooks/useIDSProxyRegistry";
 import CustomModal from "../Custom/Modal/CustomModal";
 import CheckUserProxy from "../Custom/CheckUserProxy/Index";
+import { dsGuardHandler, idsProxyHandler } from "../../contracts/Compound";
+import useSigner from "../../hooks/useSigner";
 
 const CompoundBox = ({ data, setAddCubeModal }: any) => {
   const protocol_id = useId();
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-  const [isApprove, setIsApprove] = useState(false);
   const [isUserProxyModal, setIsUserProxyModal] = useState(false);
-  // const [isModalVisib, setIsModalVisible] = useState(false);
 
   const {
     userAddress,
@@ -73,16 +62,12 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
     exchangeItems,
   } = useProtocolContext();
 
-  console.log({ isApprove }, "isApprove");
-
   // Initial Values
-
   const initialValues: AddProtocolInitValues = {
     inputsData: chainId && data?.initialData,
   };
 
-  // validate Values
-
+  // formik validation
   const validationSchema = Yup.object({
     inputsData: Yup.array().of(
       Yup.object().shape({
@@ -98,18 +83,6 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
     validationSchema,
   });
 
-  // Approve Switcher
-  const approveSwitcher = (methodName: string) => {
-    switch (methodName) {
-      case "deposit":
-        return getTokenAddress(data, chainId, 0, formik);
-      case "withdraw":
-        return getATokenAddress(data, chainId, formik);
-      default:
-        return getTokenAddress(data, chainId, 0, formik);
-    }
-  };
-
   // Execution Switcher
   const executionSwitcher = (methodName: string) => {
     switch (methodName) {
@@ -120,69 +93,26 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
     }
   };
 
-  // Eth Methods Switchers
-
-  const EthMethodSwitcher = (methodName: string) => {
+  // transfer Switch
+  const transferSwitch = async (methodName: string) => {
+    const userProxy = await handleUserProxy();
     switch (methodName) {
-      case "repayETH":
-        return userAddress;
-      case "withdrawETH":
-        return "0xe91D55AB2240594855aBd11b3faAE801Fd4c4687";
-      case "borrowETH":
-        return userAddress;
+      case "deposit":
+        return contractsAddress.proxyMockAddress;
+      case "withdraw":
+        return userProxy;
       default:
-        return null;
+        return contractsAddress.proxyMockAddress;
     }
   };
 
-  const abiCoder = new AbiCoder();
-
   // Hooks
-
   const encoder = useEncode();
   const execMock = useExecMock();
-  const approve = useApprove();
   const transfer = useTransfer();
-  const stableToken = useStableToken();
-  const variableToken = useVariableToken();
-  const drainToken = useDrainToken();
   const allowance = useAllowance();
-  const idsProxy = useIDSProxy();
-
-  // Approve Hanlder
-  // const approveHandler = () => {
-  //   // if (Object.keys(formik.errors).length !== 0) {
-  //   //   (() => toast("plz fill all fields"))();
-  //   //   return;
-  //   // }
-  //   if (formik.values.inputsData[0].rateMode) {
-  //     formik.values.inputsData[0].rateMode.toNumber() === 1
-  //       ? stableToken(
-  //           contractsAddress.proxyMockAddress,
-  //           parseUnits(
-  //             formik.values.inputsData[0].amount.toString(),
-  //             getTokenDecimals(data, chainId, 0, formik)
-  //           ),
-  //           getStableDebt(data, chainId, 0, formik),
-  //           getTokenDecimals(data, chainId, 0, formik)
-  //         )
-  //       : variableToken(
-  //           contractsAddress.proxyMockAddress,
-  //           formik.values.inputsData[0].amount,
-  //           getVariableDebt(data, chainId, 0, formik),
-  //           getTokenDecimals(data, chainId, 0, formik)
-  //         );
-  //   } else {
-  //     approve(
-  //       approveSwitcher(data.methodName),
-  //       contractsAddress.proxyMockAddress,
-  //       parseUnits(
-  //         formik.values.inputsData[0].amount.toString(),
-  //         getTokenDecimals(data, chainId, 0, formik)
-  //       )
-  //     );
-  //   }
-  // };
+  const idsProxyRegistry = useIDSProxyRegistry();
+  const signer = useSigner();
 
   // Transfer Handler
   const transferHandler = async () => {
@@ -192,7 +122,7 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
     }
     const result = await transfer(
       getTokenAddress(data, chainId, 0, formik),
-      contractsAddress.proxyMockAddress,
+      await transferSwitch(data.methodName),
       parseUnits(
         formik.values.inputsData[0].amount.toString(),
         getTokenDecimals(data, chainId, 0, formik)
@@ -201,99 +131,59 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
     return result;
   };
 
-  // Execution Handler
-  const executionHandler = async () => {
-    console.log({ setIsUserProxyModal });
-    const userProxyAddress = await idsProxy(userAddress, setIsUserProxyModal);
-    console.log({ userProxyAddress });
-    let finalProtcoloData: any;
-    if (data.methodName === "withdraw") {
-    } else {
-      finalProtcoloData = Object.values(
-        formik.values.inputsData.map((objData: any, index: number) => {
-          delete objData["showTokens"];
-          return {
-            userProxy: userProxyAddress,
-            token: getTokenAddress(data, chainId, 0, formik),
-            amount: parseUnits(
-              formik.values.inputsData[index].amount.toString(),
-              getTokenDecimals(data, chainId, index, formik)
-            ),
-          };
-        })
-      );
-      console.log({ finalProtcoloData }, "at inital");
-      // executionSwitcher(data.methodName) &&
-      //   (finalProtcoloData[0]["exec"] = executionSwitcher(data.methodName));
-      var encoded = encoder(
-        contractsAddress.hsCompondAddress,
-        data.methodName,
-        [...Object.values(finalProtcoloData[0])]
-      );
-      execMock(contractsAddress.hsCompondAddress, encoded);
-
-      console.log({ finalProtcoloData });
-    }
-
-    // console.log({ finalProtcoloData });
-
-    // const encoded = encoder(contractsAddress.haaveAddress, "withdrawETH", [
-    //   parseEther("0.1"),
-    //   "0x22404B0e2a7067068AcdaDd8f9D586F834cCe2c5",
-    // ]);
-    // const transferred: any = await transferHandler();
-
-    // if (Object.keys(transferred).length !== 0) {
-    //   (() => toast("transfer done"))();
-    //   setEncodeData([...encodeData, encoded]);
-    // }
-  };
-
   // Submit Handler
-
   async function onSubmit() {
     const newProtocol = { ...data, initialData: [...formik.values.inputsData] };
     newProtocol[protocol_id] = protocol_id;
     setSavedProtocols([...savedProtocols, newProtocol]);
     setExchageItems([]);
-    if (data.methodName === "flashLoan") {
-      const drainTokenResult = drainToken(
-        [contractsAddress.faucet],
-        [getTokenAddress(data, chainId, 0, formik)],
-        [
-          parseUnits(
-            formik.values.inputsData[0].amount.toString(),
-            getTokenDecimals(data, chainId, 0, formik)
-          ),
-        ]
-      );
-      const encodedAbi = abiCoder.encode(
-        ["address[]", "bytes32[]", "bytes[]"],
-        [
-          [contractsAddress.hMock],
-          [formatBytes32String("")],
-          [drainTokenResult as BytesLike],
-        ]
-      );
-      console.log({ drainTokenResult, encodedAbi });
-      const encoded = encoder(contractsAddress.haaveAddress, data.methodName, [
-        [getTokenAddress(data, chainId, 0, formik)],
-        [
-          parseUnits(
-            formik.values.inputsData[0].amount.toString(),
-            getTokenDecimals(data, chainId, 0, formik)
-          ),
-        ],
-        [BigNumber.from("0")],
-        encodedAbi as BytesLike,
-      ]);
-      console.log({ encoded }, "finalEncodedData data ...");
-
-      execMock(contractsAddress.haaveAddress, encoded);
-    } else {
-      return;
-    }
   }
+  // Build for user-proxy
+  const handleUserProxy = async () =>
+    await idsProxyRegistry(userAddress, setIsUserProxyModal);
+
+  // Set Authority by user
+  const handleSetAuthority = async () => {
+    if (signer !== undefined) {
+      const userProxy = await handleUserProxy();
+      const dsGuardContract = dsGuardHandler(signer);
+      const idsProxyContract = idsProxyHandler(userProxy, signer);
+      await dsGuardContract.callStatic.newGuard(
+        true,
+        contractsAddress.proxyMockAddress,
+        userProxy
+      );
+      const guardAddr = await dsGuardContract.callStatic.guards(userAddress);
+      await idsProxyContract.setAuthority(guardAddr);
+      console.log({ guardAddr }, "guard Address");
+    }
+  };
+
+  // Execution Handler
+  const executionHandler = async () => {
+    const userProxy = await handleUserProxy();
+
+    let protcoloData: any;
+    protcoloData = Object.values(
+      formik.values.inputsData.map((objData: any, index: number) => {
+        delete objData["showTokens"];
+        return {
+          userProxy,
+          token: getTokenAddress(data, chainId, 0, formik),
+          amount: parseUnits(
+            formik.values.inputsData[index].amount.toString(),
+            getTokenDecimals(data, chainId, index, formik)
+          ),
+        };
+      })
+    );
+    var encoded = encoder(
+      contractsAddress.hsCompondAddress,
+      data.methodName,
+      Object.values(protcoloData[0]) as Array<any>
+    );
+    execMock(contractsAddress.hsCompondAddress, encoded);
+  };
 
   // Token Toggle Handler
   const handleTokensToggle = (index: number) => {
@@ -377,8 +267,9 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
           <CustomModal
             isModalVisible={isUserProxyModal}
             setIsModalVisible={setIsUserProxyModal}
+            centered={false}
           >
-            <CheckUserProxy setIsModalVisible={setIsUserProxyModal} />
+            <CheckUserProxy />
           </CustomModal>
           <div className="d-flex justify-content-center">
             <h6 className="text-center">
@@ -642,10 +533,23 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
               width="60px"
               height="60px"
               type="submit"
-              title="Approve"
+              title="Build"
               fontSize="12px"
               borderRadius="50%"
-              disabled={isApprove}
+              clicked={handleUserProxy}
+            />
+          </div>
+          <div className="me-3">
+            <CustomButton
+              bgcolor={primaryColor}
+              color="white"
+              padding="8px 8px"
+              width="60px"
+              height="60px"
+              type="submit"
+              title="Transfer"
+              fontSize="12px"
+              borderRadius="50%"
               clicked={transferHandler}
             />
           </div>
@@ -712,6 +616,21 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
               fontSize="12px"
               borderRadius="50%"
               clicked={executionHandler}
+            />
+          </div>
+
+          <div className="ms-3">
+            <CustomButton
+              bgcolor={primaryColor}
+              color="white"
+              padding="8px 8px"
+              width="60px"
+              height="60px"
+              type="submit"
+              title="Authority"
+              fontSize="12px"
+              borderRadius="50%"
+              clicked={handleSetAuthority}
             />
           </div>
         </div>

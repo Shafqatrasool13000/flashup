@@ -20,7 +20,7 @@ const idsProxyHandler = (address: string, signer: Signer): IDSProxy => {
 };
 const dsGuardHandler = (signer: Signer): DSGuardFactory => {
   return DSGuardFactory__factory.connect(
-    contractsAddress.proxyRegistry,
+    contractsAddress.dSGuardFactoryAddress,
     signer
   );
 };

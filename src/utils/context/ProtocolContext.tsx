@@ -26,6 +26,7 @@ const ProtocolsContextProvider: React.FC<ProtocolContextProps> = ({
     setExchageItems([]);
     setChainId(chain?.id.toString() as string);
     setUserAddress(address as string);
+    console.log("useEffect rerun");
   }, [chain?.id, address]);
 
   const toggleProtocoInputlBox = (data: any) => {

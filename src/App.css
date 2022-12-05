@@ -791,6 +791,7 @@ button[type="reset"] {
   align-items: center;
 }
 
-.mt-1 {
-  margin-top: 1rem;
+.ant-modal-content {
+  background-color: transparent !important;
+  box-shadow: none !important;
 }

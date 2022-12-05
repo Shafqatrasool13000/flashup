@@ -16,12 +16,15 @@ const useIDSProxyRegistry = () => {
           const constant = await contract.callStatic.proxies(address);
           console.log({ constant });
           if (constant == constants.AddressZero) {
+            setIsUserProxyModal(true);
             const result = await contract["build(address)"](address);
+            await result.wait();
+            setIsUserProxyModal(false);
             return result;
           }
-          setIsUserProxyModal(true);
           return constant;
         } catch (error) {
+          setIsUserProxyModal(false);
           console.log(error, "error in drain token");
         }
       }

@@ -14,7 +14,7 @@ export type ButtonProps = {
   form?: any;
   key?: string | number;
   fontSize: string;
-  icon?: string | null;
+  icon?: React.ReactNode;
   fontFamily?: string;
   borderRadius: string;
   height?: string;
@@ -32,7 +32,7 @@ const CustomButton = ({
   form,
   key,
   fontSize,
-  icon = null,
+  icon = undefined,
   fontFamily = "EnnVisions",
   borderRadius = "4px",
   height = "auto",
@@ -55,13 +55,8 @@ const CustomButton = ({
         onClick={clicked}
         htmlType={type}
         title={title}
+        icon={icon}
       >
-        {icon && (
-          <span className="me-2">
-            <img src={icon} alt={icon} />
-          </span>
-        )}
-
         {title}
       </Button>
     </CustormButtonStyle>

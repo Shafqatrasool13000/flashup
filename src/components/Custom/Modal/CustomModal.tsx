@@ -1,6 +1,12 @@
+import { CloseOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
 
-const CustomModal = ({ children, isModalVisible, setIsModalVisible }: any) => {
+const CustomModal = ({
+  children,
+  isModalVisible,
+  setIsModalVisible,
+  centered,
+}: any) => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
@@ -9,8 +15,10 @@ const CustomModal = ({ children, isModalVisible, setIsModalVisible }: any) => {
       visible={isModalVisible}
       footer={null}
       onCancel={handleCancel}
-      centered={true}
+      centered={centered}
+      style={{ top: 20 }}
       closable={false}
+      closeIcon={<CloseOutlined />}
     >
       {children}
     </Modal>
