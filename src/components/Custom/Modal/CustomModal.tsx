@@ -12,7 +12,7 @@ const CustomModal = ({
   };
   return (
     <Modal
-      visible={isModalVisible}
+      open={isModalVisible}
       footer={null}
       onCancel={handleCancel}
       centered={centered}

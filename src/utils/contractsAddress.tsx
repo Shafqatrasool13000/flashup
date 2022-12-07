@@ -6,7 +6,7 @@ const contractsAddress = {
   registryAddress: "0xC1Fc2406E5b922aafAB5f2f32c688C529BecAd9a",
   proxyMockAddress: "0xDcDafE091Ac43e1F41CBbbcF78aCB5F4260ff52C",
   dSGuardFactoryAddress: "0x08ac00C870518EeB973638D68D28A9365db68a1b",
-  hsCompondAddress: "0xaA90D77577fC4626058C23AE6919200410dEAB87",
+  hsCompondAddress: "0xC86a4B4e3d1412C7338CD9A672dDEcE16Bb29D19",
   proxyRegistry: "0x46759093D8158db8BB555aC7C6F98070c56169ce",
 };
 

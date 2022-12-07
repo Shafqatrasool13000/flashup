@@ -3,8 +3,8 @@ import styled from "styled-components";
 const AddProtocolStyled = styled.div`
   margin-top: 24px;
 
-  .label {
-    font-size: 18px;
+  .text-label {
+    font-size: 17px;
   }
 
   .back-icon,
@@ -31,6 +31,7 @@ const AddProtocolStyled = styled.div`
       border: 1px solid rgb(255, 255, 255, 0.4);
     }
   }
+
   input {
     border: none;
     background: transparent;

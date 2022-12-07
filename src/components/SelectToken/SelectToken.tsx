@@ -14,7 +14,6 @@ const SelectToken: React.FC<any> = ({
   formik,
 }) => {
   const inputElement = useRef<any>();
-  console.log(showTokens, "tokens ....");
 
   useEffect(() => {
     inputElement.current.focus();
@@ -31,12 +30,13 @@ const SelectToken: React.FC<any> = ({
         showSearch
         style={{ width: 410 }}
         placeholder="Select Token"
-        defaultValue={formik.values.inputsData[index].token}
+        defaultValue={formik.values.tokensData[index].token}
         optionFilterProp="children"
         optionLabelProp="label"
         onBlur={() => handleTokensToggle(index)}
         open={showTokens}
         onChange={(value) => {
+          console.log({ value }, "value in select token");
           formik.setFieldValue(name, value);
         }}
         onSelect={() => tokenInputRemove()}

@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { aavaMainTokens, aavaTestTokens } from "../tokens/aava";
 
 const compound = [
@@ -10,7 +9,12 @@ const compound = [
     tag: [],
     protocolName: "Compound",
     protocolLogo: "",
-    initialData: [{ token: "DAI", amount: "", showTokens: false }],
+    initialData: {
+      userProxy: "",
+      tokensData: [
+        { title: "Input", token: "DAI", amount: "", showTokens: false },
+      ],
+    },
     function_configs: {
       tokens: {
         "1": aavaMainTokens,
@@ -50,7 +54,18 @@ const compound = [
     tag: "",
     protocolName: "Compound",
     protocolLogo: "",
-    initialData: [{ token: "DAI", amount: "", showTokens: false }],
+    initialData: {
+      userProxy: "",
+      tokensData: [
+        {
+          title: "Input",
+          userProxy: "",
+          token: "DAI",
+          amount: "",
+          showTokens: false,
+        },
+      ],
+    },
     function_configs: {
       tokens: {
         "1": aavaMainTokens,
@@ -81,14 +96,18 @@ const compound = [
     tag: "",
     protocolName: "Compound",
     protocolLogo: "",
-    initialData: [
-      {
-        token: "DAI",
-        amount: "",
-        showTokens: false,
-        rateMode: BigNumber.from(2),
-      },
-    ],
+    initialData: {
+      userProxy: "",
+      tokensData: [
+        { title: "cAmount In", showTokens: false, token: "DAI", amount: "" },
+        {
+          title: "Borrow Amount",
+          showTokens: false,
+          token: "DAI",
+          amount: "",
+        },
+      ],
+    },
     function_configs: {
       tokens: {
         "1": aavaMainTokens,
@@ -137,15 +156,18 @@ const compound = [
     tag: "",
     protocolName: "Compound",
     protocolLogo: "",
-    initialData: [
-      {
-        token: "DAI",
-        amount: "",
-        showTokens: false,
-        rateMode: BigNumber.from(2),
-        // onBehalfOf: +true,
-      },
-    ],
+    initialData: {
+      userProxy: "",
+      tokensData: [
+        { title: "Repay Amount", showTokens: false, token: "cDAI", amount: "" },
+        {
+          title: "cWithdrawAmount",
+          showTokens: false,
+          token: "cEth",
+          amount: "",
+        },
+      ],
+    },
     function_configs: {
       tokens: {
         "1": aavaMainTokens,
@@ -189,3 +211,21 @@ const compound = [
 ];
 
 export default compound;
+
+//{userProxy:'',tokensData: [{ title:'Input',token: "DAI", amount: "", showTokens: false }]}
+
+// {userProxy:'',tokensData:[{title:'Input', userProxy:'',token: "DAI", amount: "", showTokens: false }]}
+
+// {
+//     userProxy:'',
+// tokensData: [
+//       {title:'cAmountIn',showTokens:false,token:'cDAI',amount:''},
+// {title:'Borrow Amount',showTokens:false,token:'cEth',amount:''}]
+// },
+
+// {
+//     userProxy:'',
+// tokensData: [
+//       {title:'Repay Amount',showTokens:false,token:'cDAI',amount:''},
+// {title:'cWithdrawAmount',showTokens:false,token:'cEth',amount:''}]
+// },
