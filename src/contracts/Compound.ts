@@ -11,21 +11,21 @@ import {
 import { Signer } from "ethers";
 import contractsAddress from "../utils/contractsAddress";
 
-const hsCompoundHandler = (signer: Signer): HSCompound => {
+const hsCompoundFactory = (signer: Signer): HSCompound => {
   return HSCompound__factory.connect(contractsAddress.hsCompondAddress, signer);
 };
 
-const idsProxyHandler = (address: string, signer: Signer): IDSProxy => {
+const idsProxyFactory = (address: string, signer: Signer): IDSProxy => {
   return IDSProxy__factory.connect(address, signer);
 };
-const dsGuardHandler = (signer: Signer): DSGuardFactory => {
+const dsGuardFactory = (signer: Signer): DSGuardFactory => {
   return DSGuardFactory__factory.connect(
     contractsAddress.dSGuardFactoryAddress,
     signer
   );
 };
 
-const idsProxyRegistryHandler = (signer: Signer): IDSProxyRegistry => {
+const idsProxyRegistryFactory = (signer: Signer): IDSProxyRegistry => {
   return IDSProxyRegistry__factory.connect(
     contractsAddress.proxyRegistry,
     signer
@@ -33,8 +33,8 @@ const idsProxyRegistryHandler = (signer: Signer): IDSProxyRegistry => {
 };
 
 export {
-  hsCompoundHandler,
-  idsProxyHandler,
-  dsGuardHandler,
-  idsProxyRegistryHandler,
+  hsCompoundFactory,
+  idsProxyFactory,
+  dsGuardFactory,
+  idsProxyRegistryFactory,
 };

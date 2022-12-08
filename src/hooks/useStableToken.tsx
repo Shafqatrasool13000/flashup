@@ -1,7 +1,7 @@
 import { parseUnits } from "ethers/lib/utils";
 import { useCallback } from "react";
 import { IStableDebtToken } from "../typechain";
-import { stableTokenHandler } from "../contracts/Aava";
+import { stableTokenFactory } from "../contracts/Aava";
 import useSigner from "./useSigner";
 
 const useStableToken = () => {
@@ -16,7 +16,7 @@ const useStableToken = () => {
     ): Promise<void> => {
       console.log(to, amount, "data in stable token....");
       if (signer !== undefined) {
-        let contract: IStableDebtToken = stableTokenHandler(signer, address);
+        let contract: IStableDebtToken = stableTokenFactory(signer, address);
         try {
           const tx = await contract.approveDelegation(
             to,

@@ -5,4 +5,4 @@ const erc20Factory = (address: string, signer: Signer): ERC20 => {
   return ERC20__factory.connect(address, signer);
 };
 
-export { erc20Factory };
+export default erc20Factory;

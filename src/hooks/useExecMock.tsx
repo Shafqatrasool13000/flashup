@@ -1,6 +1,6 @@
 import { arrayify, parseEther } from "ethers/lib/utils";
 import { useCallback } from "react";
-import { proxyMockHandler } from "../contracts/Aava";
+import { proxyMockFactory } from "../contracts/Aava";
 import { ProxyMock } from "../typechain";
 import useSigner from "./useSigner";
 
@@ -17,7 +17,7 @@ export const useExecMock = () => {
       if (signer !== undefined) {
         console.log(signer, "signer in exec mock");
 
-        let contract: ProxyMock = proxyMockHandler(signer);
+        let contract: ProxyMock = proxyMockFactory(signer);
         try {
           const tx = await contract.execMock(to, arrayify(data), {
             value: parseEther(amount ? amount.toString() : "0"),

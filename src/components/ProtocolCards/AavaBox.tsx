@@ -11,7 +11,7 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { useExecMock } from "../../hooks/useExecMock";
-import SelectToken from "../SelectToken/SelectToken";
+import ASelectToken from "../SelectToken/AavaSelect";
 import { RateModeStyled } from "../AddCube/style";
 import { Spin, Switch } from "antd";
 import { Icon } from "@iconify/react";
@@ -38,7 +38,7 @@ import {
   getTokenDecimals,
   getVariableDebt,
   getATokenAddress,
-} from "./functional";
+} from "./aavaFunctions";
 import {
   AbiCoder,
   BytesLike,
@@ -482,7 +482,7 @@ const AavaBox = ({ data, setAddCubeModal }: any) => {
                                     : "d-none"
                                 }`}
                               >
-                                <SelectToken
+                                <ASelectToken
                                   showTokens={
                                     formik.values.inputsData[index].showTokens
                                   }

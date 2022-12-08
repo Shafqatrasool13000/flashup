@@ -1,4 +1,4 @@
-const aaveMainnetTokens = [
+const mainnetTokens = [
   {
     aTokenAddress: "0x3Ed3B47Dd13EC9a98b44e6204A523E766B225811",
     icon: "cryptocurrency:usdt",
@@ -310,7 +310,7 @@ const aaveMainnetTokens = [
     decimals: 18,
   },
 ];
-const aavaTestnetTokens = [
+const testnetTokens = [
   {
     symbol: "AAVE",
     aTokenSymbol: "aAAVE",
@@ -495,4 +495,4 @@ const aavaTestnetTokens = [
   },
 ];
 
-export { aavaTestnetTokens, aaveMainnetTokens };
+export { testnetTokens, mainnetTokens };

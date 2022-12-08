@@ -32,7 +32,7 @@ import {
   getTokenDecimals,
   getATokenAddress,
 } from "./functional";
-import { parseEther, parseUnits } from "ethers/lib/utils";
+import { parseUnits } from "ethers/lib/utils";
 import useProtocolContext from "../../hooks/useProtocolContext";
 import CustomButton from "../Custom/CustomButton/CustomButton";
 import { primaryColor } from "../Global";
@@ -41,9 +41,10 @@ import useAllowance from "../../hooks/useAllowance";
 import useIDSProxyRegistry from "../../hooks/useIDSProxyRegistry";
 import CustomModal from "../Custom/Modal/CustomModal";
 import CheckUserProxy from "../Custom/CheckUserProxy/Index";
-import { dsGuardHandler, idsProxyHandler } from "../../contracts/Compound";
+import { dsGuardFactory, idsProxyFactory } from "../../contracts/Compound";
 import useSigner from "../../hooks/useSigner";
-import { erc20Factory } from "../../contracts/common";
+import erc20Factory from "../../contracts/common";
+import { Item } from "react-bootstrap/lib/Breadcrumb";
 
 const CompoundBox = ({ data, setAddCubeModal }: any) => {
   const protocol_id = useId();
@@ -138,7 +139,7 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
       getTokenAddress(data, chainId, 0, formik),
       await transferSwitch(data.methodName),
       parseUnits(
-        formik.values.amount.toString(),
+        formik.values.tokensData[0].amount.toString(),
         getTokenDecimals(data, chainId, 0, formik)
       )
     );
@@ -166,8 +167,8 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
   const handleSetAuthority = async () => {
     if (signer !== undefined) {
       const userProxy = await handleUserProxy();
-      const dsGuardContract = dsGuardHandler(signer);
-      const idsProxyContract = idsProxyHandler(userProxy, signer);
+      const dsGuardContract = dsGuardFactory(signer);
+      const idsProxyContract = idsProxyFactory(userProxy, signer);
       await dsGuardContract.callStatic.newGuard(
         true,
         contractsAddress.proxyMockAddress,
@@ -182,25 +183,34 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
   // Execution Handler
   const executionHandler = async () => {
     const userProxy = await handleUserProxy();
-
-    let protcoloData: any;
-    protcoloData = Object.values(
-      formik.values.map((objData: any, index: number) => {
-        delete objData["showTokens"];
-        return {
-          userProxy,
-          token: getTokenAddress(data, chainId, 0, formik),
+    const tokensData = formik.values.tokensData
+      .map((_: any, index: number) =>
+        Object.values({
+          token: getTokenAddress(data, chainId, index, formik),
           amount: parseUnits(
-            formik.values[index].amount.toString(),
+            formik.values.tokensData[index].amount.toString(),
             getTokenDecimals(data, chainId, index, formik)
           ),
-        };
-      })
+        })
+      )
+      .flat();
+    const addresess = tokensData.filter(
+      (item: any) => typeof item === "string"
     );
+    const amounts = tokensData.filter((item: any) => typeof item !== "string");
+    const protocolData = [userProxy, ...addresess, ...amounts];
+    if (data.methodName == "repay" || data.methodName == "borrow") {
+      protocolData.push(false);
+    }
+    console.log(
+      protocolData.filter((item) => typeof item !== "string"),
+      "zeroth"
+    );
+    console.log({ protocolData });
     var encoded = encoder(
       contractsAddress.hsCompondAddress,
       data.methodName,
-      Object.values(protcoloData[0]) as Array<any>
+      protocolData
     );
     execMock(contractsAddress.hsCompondAddress, encoded);
   };
@@ -375,22 +385,26 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
                           textAlign="end"
                         />
 
-                        {/* <div className="d-flex justify-content-end mt-4">
-            <GetBalance
-              token={
-                data?.function_configs.tokens[chainId]?.find(
-                  ({ symbol }: any) =>
-                    symbol ===
-                    formik.values.tokensData[0].token
-                )?.address
-              }
-              decimal={18}
-              // decimal={getTokenDecimals(data, chainId, 0, formik)}
-            />
-            <button className="max-btn" type="button">
-              Max
-            </button>
-          </div> */}
+                        <div className="d-flex justify-content-end mt-4">
+                          <GetBalance
+                            token={
+                              data?.function_configs.tokens[chainId]?.find(
+                                ({ symbol }: any) =>
+                                  symbol ===
+                                  formik.values.tokensData[index].token
+                              )?.address
+                            }
+                            decimal={getTokenDecimals(
+                              data,
+                              chainId,
+                              index,
+                              formik
+                            )}
+                          />
+                          <button className="max-btn" type="button">
+                            Max
+                          </button>
+                        </div>
                       </Col>
                     </Row>
                   )

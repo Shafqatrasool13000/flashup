@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
-import { aavaMainTokens, aavaTestTokens } from "../tokens/aava";
+import { aavaTestnetTokens, aaveMainnetTokens } from "../tokens/aava";
 
-const aave2 = [
+const aave2ProtocolData = [
   {
     name: "Deposit",
     methodName: "deposit",
@@ -13,8 +13,8 @@ const aave2 = [
     initialData: [{ token: "DAI", amount: "", showTokens: false }],
     function_configs: {
       tokens: {
-        "1": aavaMainTokens,
-        "5": aavaTestTokens,
+        "1": aaveMainnetTokens,
+        "5": aavaTestnetTokens,
       },
       outputs: [],
     },
@@ -53,8 +53,8 @@ const aave2 = [
     initialData: [{ token: "USDT", amount: "", showTokens: false }],
     function_configs: {
       tokens: {
-        "1": aavaMainTokens,
-        "5": aavaTestTokens,
+        "1": aaveMainnetTokens,
+        "5": aavaTestnetTokens,
       },
       outputs: [],
     },
@@ -91,8 +91,8 @@ const aave2 = [
     ],
     function_configs: {
       tokens: {
-        "1": aavaMainTokens,
-        "5": aavaTestTokens,
+        "1": aaveMainnetTokens,
+        "5": aavaTestnetTokens,
       },
       outputs: [],
     },
@@ -148,8 +148,8 @@ const aave2 = [
     ],
     function_configs: {
       tokens: {
-        "1": aavaMainTokens,
-        "5": aavaTestTokens,
+        "1": aaveMainnetTokens,
+        "5": aavaTestnetTokens,
       },
       outputs: [],
     },
@@ -207,8 +207,8 @@ const aave2 = [
     ],
     function_configs: {
       tokens: {
-        "1": aavaMainTokens,
-        "5": aavaTestTokens,
+        "1": aaveMainnetTokens,
+        "5": aavaTestnetTokens,
       },
       outputs: [],
     },
@@ -244,8 +244,8 @@ const aave2 = [
     ],
     function_configs: {
       tokens: {
-        "1": aavaMainTokens,
-        "5": aavaTestTokens,
+        "1": aaveMainnetTokens,
+        "5": aavaTestnetTokens,
       },
       outputs: [],
     },
@@ -281,8 +281,8 @@ const aave2 = [
     ],
     function_configs: {
       tokens: {
-        "1": aavaMainTokens,
-        "5": aavaTestTokens,
+        "1": aaveMainnetTokens,
+        "5": aavaTestnetTokens,
       },
       outputs: [],
     },
@@ -317,8 +317,8 @@ const aave2 = [
     ],
     function_configs: {
       tokens: {
-        "1": aavaMainTokens,
-        "5": aavaTestTokens,
+        "1": aaveMainnetTokens,
+        "5": aavaTestnetTokens,
       },
       outputs: [],
     },
@@ -354,8 +354,8 @@ const aave2 = [
     ],
     function_configs: {
       tokens: {
-        "1": aavaMainTokens,
-        "5": aavaTestTokens,
+        "1": aaveMainnetTokens,
+        "5": aavaTestnetTokens,
       },
       outputs: [],
     },
@@ -377,4 +377,4 @@ const aave2 = [
   },
 ];
 
-export default aave2;
+export default aave2ProtocolData;

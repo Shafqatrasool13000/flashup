@@ -1,7 +1,7 @@
 import { constants } from "ethers";
 import { useCallback } from "react";
 import { IDSProxyRegistry } from "../typechain";
-import { idsProxyRegistryHandler } from "../contracts/Compound";
+import { idsProxyRegistryFactory } from "../contracts/Compound";
 import useSigner from "./useSigner";
 
 const useIDSProxy = () => {
@@ -11,7 +11,7 @@ const useIDSProxy = () => {
     async (address: string): Promise<any> => {
       console.log(address, "data params drain token....");
       if (signer !== undefined) {
-        let contract: IDSProxyRegistry = idsProxyRegistryHandler(signer);
+        let contract: IDSProxyRegistry = idsProxyRegistryFactory(signer);
         try {
           const constant = await contract.callStatic.proxies(address);
           console.log({ constant });

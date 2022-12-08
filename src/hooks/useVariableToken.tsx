@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import { useCallback } from "react";
 import { IVariableDebtToken } from "../typechain";
-import { variableTokenHandler } from "../contracts/Aava";
+import { variableTokenFactory } from "../contracts/Aava";
 import useSigner from "./useSigner";
 
 const useVariableToken = () => {
@@ -22,7 +22,7 @@ const useVariableToken = () => {
         "data in variable token...."
       );
       if (signer !== undefined) {
-        let contract: IVariableDebtToken = variableTokenHandler(
+        let contract: IVariableDebtToken = variableTokenFactory(
           signer,
           address
         );

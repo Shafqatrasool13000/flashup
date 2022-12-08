@@ -15,41 +15,41 @@ import {
 import { Signer } from "ethers";
 import contractsAddress from "../utils/contractsAddress";
 
-const HAaveHandler = (signer: Signer): HAaveProtocol => {
+const HAaveFactory = (signer: Signer): HAaveProtocol => {
   return HAaveProtocol__factory.connect(contractsAddress.haaveAddress, signer);
 };
 
-const proxyMockHandler = (signer: Signer): ProxyMock => {
+const proxyMockFactory = (signer: Signer): ProxyMock => {
   return ProxyMock__factory.connect(contractsAddress.proxyMockAddress, signer);
 };
 
-const registerHandler = (signer: Signer): Registry => {
+const registerFactory = (signer: Signer): Registry => {
   return Registry__factory.connect(contractsAddress.haaveAddress, signer);
 };
 
-const stableTokenHandler = (
+const stableTokenFactory = (
   signer: Signer,
   address: string
 ): IStableDebtToken => {
   console.log({ address }, "address in stable");
   return IStableDebtToken__factory.connect(address, signer);
 };
-const variableTokenHandler = (
+const variableTokenFactory = (
   signer: Signer,
   address: string
 ): IVariableDebtToken => {
   console.log({ address }, "address in variable");
   return IVariableDebtToken__factory.connect(address, signer);
 };
-const drainTokenHandler = (signer: Signer): HMock => {
+const drainTokenFactory = (signer: Signer): HMock => {
   return HMock__factory.connect(contractsAddress.hMock, signer);
 };
 
 export {
-  HAaveHandler,
-  drainTokenHandler,
-  variableTokenHandler,
-  stableTokenHandler,
-  registerHandler,
-  proxyMockHandler,
+  HAaveFactory,
+  drainTokenFactory,
+  variableTokenFactory,
+  stableTokenFactory,
+  registerFactory,
+  proxyMockFactory,
 };

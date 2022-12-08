@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { HMock } from "../typechain";
-import { drainTokenHandler } from "../contracts/Aava";
+import { drainTokenFactory } from "../contracts/Aava";
 import useSigner from "./useSigner";
 
 const useDrainToken = () => {
@@ -19,7 +19,7 @@ const useDrainToken = () => {
         "data params drain token...."
       );
       if (signer !== undefined) {
-        let contract: HMock = drainTokenHandler(signer);
+        let contract: HMock = drainTokenFactory(signer);
         try {
           const result = contract.interface.encodeFunctionData("drainTokens", [
             faucetAddress,

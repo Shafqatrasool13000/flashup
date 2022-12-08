@@ -16,12 +16,12 @@ export const getATokenAddress = (data: any, chain: any, formik: any) => {
 //  get decimals
 export const getTokenDecimals = (
   data: any,
-  chainId: any,
+  chain: any,
   index: number,
   formik: any
 ) => {
-  const decimals = data.function_configs.tokens[chainId].find(
-    ({ symbol }: any) => symbol === formik.values.tokensData[index].token
+  const decimals = data.function_configs.tokens[chain].find(
+    ({ symbol }: any) => symbol === formik.values.inputsData[index].token
   ).decimals;
   console.log({ decimals });
   return decimals;
@@ -30,14 +30,13 @@ export const getTokenDecimals = (
 
 export const getTokenAddress = (
   data: any,
-  chainId: any,
+  chain: any,
   index: number,
   formik: any
 ) => {
-  const address = data.function_configs.tokens[chainId].find(
-    ({ symbol }: any) => symbol === formik.values.tokensData[index].token
+  const address = data.function_configs.tokens[chain].find(
+    ({ symbol }: any) => symbol === formik.values.inputsData[index].token
   ).address;
-  console.log({ address });
   return address;
 };
 // get stable token addresss

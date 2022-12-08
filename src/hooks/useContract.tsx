@@ -1,18 +1,18 @@
 import { useMemo, useState } from "react";
-import { loaders } from "../utils/contractsLoader";
 import useSigner from "./useSigner";
 import { HAaveProtocol } from "../typechain";
+import contractsLoader from "../utils/contractsLoader";
 
 type Contracts = HAaveProtocol;
 
 const useContract = (name: string): Contracts => {
   const signer = useSigner();
   const [contract, setContract] = useState<Contracts>(
-    loaders[name ?? "proxy"](signer)
+    contractsLoader[name ?? "proxy"](signer)
   );
   useMemo(() => {
     if (signer !== undefined) {
-      setContract(loaders[name](signer));
+      setContract(contractsLoader[name](signer));
     }
   }, [name]);
 
