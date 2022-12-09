@@ -212,6 +212,124 @@ const compoundProtocolData = [
       "5": "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
     },
   },
+  {
+    name: "Enter Market",
+    methodName: "enterMarket",
+    signature: () => console.log(""),
+    description: "",
+    tag: "",
+    protocolName: "Compound",
+    protocolLogo: "",
+    initialData: {
+      userProxy: "",
+      tokensData: [
+        {
+          title: "Amount",
+          showTokens: false,
+          token: "cDAI",
+          amount: "",
+        },
+      ],
+    },
+    function_configs: {
+      tokens: {
+        "1": compoundMainnetTokens,
+        "5": compoundTestnetTokens,
+      },
+      outputs: [],
+    },
+    attributes: [
+      {
+        name: "ETH Debt",
+        value: 234,
+      },
+      {
+        name: "Total Debt",
+        value: 234,
+      },
+      {
+        name: "Total Collatrel",
+        value: 234,
+      },
+      {
+        name: "Utilization",
+        value: 234,
+      },
+    ],
+    protocol_configs: {
+      tokenlist: [],
+      fee: 12,
+      prices: 12,
+    },
+    pool: {
+      name: "",
+      pool_address: "",
+      pool_apy: "",
+    },
+    ltv: {
+      "1": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+      "5": "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
+    },
+  },
+  {
+    name: "Exit Market",
+    methodName: "exitMarket",
+    signature: () => console.log(""),
+    description: "",
+    tag: "",
+    protocolName: "Compound",
+    protocolLogo: "",
+    initialData: {
+      userProxy: "",
+      tokensData: [
+        {
+          title: "Amount",
+          showTokens: false,
+          token: "cDAI",
+          amount: "",
+        },
+      ],
+    },
+    function_configs: {
+      tokens: {
+        "1": compoundMainnetTokens,
+        "5": compoundTestnetTokens,
+      },
+      outputs: [],
+    },
+    attributes: [
+      {
+        name: "ETH Debt",
+        value: 234,
+      },
+      {
+        name: "Total Debt",
+        value: 234,
+      },
+      {
+        name: "Total Collatrel",
+        value: 234,
+      },
+      {
+        name: "Utilization",
+        value: 234,
+      },
+    ],
+    protocol_configs: {
+      tokenlist: [],
+      fee: 12,
+      prices: 12,
+    },
+    pool: {
+      name: "",
+      pool_address: "",
+      pool_apy: "",
+    },
+    ltv: {
+      "1": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+      "5": "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
+    },
+  },
 ];
 
 export default compoundProtocolData;

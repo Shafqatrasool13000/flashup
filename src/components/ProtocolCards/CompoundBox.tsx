@@ -148,18 +148,18 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
 
   // Submit Handler
   async function onSubmit() {
-    const newProtocol = { ...data, initialData: [...formik.values] };
-    newProtocol[protocol_id] = protocol_id;
-    setSavedProtocols([...savedProtocols, newProtocol]);
+    // const newProtocol = { ...data, initialData: [...formik.values] };
+    // newProtocol[protocol_id] = protocol_id;
+    // setSavedProtocols([...savedProtocols, newProtocol]);
     var encoded = encoder(contractsAddress.hsCompondAddress, data.methodName, [
       await handleUserProxy(),
-      "0x64078a6189Bf45f80091c6Ff2fCEe1B15Ac8dbde",
-      "0x0545a8eaF7ff6bB6F708CbB544EA55DBc2ad7b2a",
-      parseUnits("3", 8),
-      parseUnits("3", 8),
-      true,
+      getTokenAddress(data, chainId, 0, formik),
     ]);
-    execMock(contractsAddress.hsCompondAddress, encoded);
+    execMock(
+      contractsAddress.hsCompondAddress,
+      encoded,
+      formik.values.tokensData[0].amount
+    );
     setExchageItems([]);
   }
 
@@ -385,7 +385,7 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
                           textAlign="end"
                         />
 
-                        <div className="d-flex justify-content-end mt-4">
+                        <div className="d-flex justify-content-end mt-2">
                           <GetBalance
                             token={
                               data?.function_configs.tokens[chainId]?.find(

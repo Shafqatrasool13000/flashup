@@ -13,7 +13,7 @@ export const useExecMock = () => {
       data: any,
       amount: string | null = null
     ): Promise<void> => {
-      console.log(data, "data in execk....");
+      console.log(data, amount, to, "data in execk....");
       if (signer !== undefined) {
         console.log(signer, "signer in exec mock");
 

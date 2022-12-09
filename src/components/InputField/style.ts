@@ -3,7 +3,7 @@ import { ProtocotInputStyleProps } from "../../utils/types";
 
 export const InputFieldStyled = styled.div<ProtocotInputStyleProps>`
   .form-control {
-    margin-top: 0;
+    margin-top: 20px;
   }
   input {
     text-align: ${(props) => props.textAlign};

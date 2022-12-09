@@ -55,7 +55,7 @@ const AddProtocolStyled = styled.div`
     .max-btn {
       font-size: 14px;
       border-radius: 4px;
-      padding: 0px 15px;
+      padding: 0px 10px;
       background: transparent;
       color: white;
       border: 1px solid rgb(57, 59, 74);
