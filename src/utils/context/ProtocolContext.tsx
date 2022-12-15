@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { useAccount, useNetwork } from "wagmi";
-import AavaBox from "../../components/ProtocolCards/AavaBox";
+import AavaBox from "../../components/ProtocolCards/AaveBox";
 import CompoundBox from "../../components/ProtocolCards/CompoundBox";
 import { Exchange_Items } from "../types";
 import { Context_Api_Data, ProtocolContextProps } from "./types";
@@ -31,13 +31,12 @@ const ProtocolsContextProvider: React.FC<ProtocolContextProps> = ({
 
   const toggleProtocoInputlBox = (data: any) => {
     switch (data.protocolName) {
-      case "Aava 2":
+      case "Aave":
         setExchageItems([...exchangeItems, { Component: AavaBox, data }]);
         break;
       case "Compound":
         setExchageItems([...exchangeItems, { Component: CompoundBox, data }]);
         break;
-
       default:
         setExchageItems([...exchangeItems, { Component: AavaBox, data }]);
         break;

@@ -1,4 +1,4 @@
-import aave2ProtocolData from "./protocols/aave";
+import aaveProtocolData from "./protocols/aave";
 import compoundProtocolData from "./protocols/compound";
 
 export const protocolsData = [
@@ -15,8 +15,8 @@ export const protocolsData = [
   //     exchanger: uniswap,
   //   },
   {
-    title: "Aave V2",
-    exchanger: aave2ProtocolData,
+    title: "Aave",
+    exchanger: aaveProtocolData,
   },
   //   {
   //     title: "Sushiswap",

@@ -41,9 +41,12 @@ import useAllowance from "../../hooks/useAllowance";
 import useIDSProxyRegistry from "../../hooks/useIDSProxyRegistry";
 import CustomModal from "../Custom/Modal/CustomModal";
 import CheckUserProxy from "../Custom/CheckUserProxy/Index";
-import { dsGuardFactory, idsProxyFactory } from "../../contracts/Compound";
+import {
+  dsGuardFactory,
+  idsProxyFactory,
+} from "../../contracts_factories/Compound";
 import useSigner from "../../hooks/useSigner";
-import erc20Factory from "../../contracts/common";
+import erc20Factory from "../../contracts_factories/common";
 import { Item } from "react-bootstrap/lib/Breadcrumb";
 
 const CompoundBox = ({ data, setAddCubeModal }: any) => {

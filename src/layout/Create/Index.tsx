@@ -9,19 +9,10 @@ import SavedProtocols from "../../components/SavedProtocols/SavedProtocols";
 import useProtocolContext from "../../hooks/useProtocolContext";
 
 const Index = () => {
-  const {
-    encodeData,
-    setEncodeData,
-    savedProtocols,
-    exchangeItems,
-    setExchageItems,
-    addCubeModal,
-    setAddCubeModal,
-  } = useProtocolContext();
+  const { savedProtocols, exchangeItems, addCubeModal, setAddCubeModal } =
+    useProtocolContext();
 
   console.log({ savedProtocols });
-  const dragItem = useRef<number>(0);
-  const dragOverItem = useRef<number>(0);
   const messagesEndRef = useRef<any>(null);
 
   const scrollToBottom = () => {
@@ -31,37 +22,6 @@ const Index = () => {
   useEffect(() => {
     scrollToBottom();
   }, [exchangeItems]);
-
-  // Drag Start
-  const dragStart = (position: any) => {
-    dragItem.current = position;
-  };
-
-  // In Dragging
-  const dragEnter = (position: any) => {
-    dragOverItem.current = position;
-  };
-
-  // Drop Dragged
-  const drop = () => {
-    const copyListItems = [...exchangeItems];
-    const copyEncodeItems = [...encodeData];
-
-    const dragItemContent = copyListItems[dragItem.current];
-    const dragEncodeContent = copyEncodeItems[dragItem.current];
-
-    copyListItems.splice(dragItem.current, 1);
-    copyEncodeItems.splice(dragItem?.current, 1);
-
-    copyListItems.splice(dragOverItem.current, 0, dragItemContent);
-    copyEncodeItems.splice(dragOverItem.current, 0, dragEncodeContent);
-
-    dragItem.current = 0;
-    dragOverItem.current = 0;
-
-    setExchageItems(copyListItems);
-    setEncodeData(copyEncodeItems);
-  };
 
   return (
     <>
@@ -80,10 +40,6 @@ const Index = () => {
                     cursor: "pointer",
                   }}
                   ref={messagesEndRef}
-                  onDragStart={() => dragStart(index)}
-                  onDragEnter={() => dragEnter(index)}
-                  onDragEnd={drop}
-                  draggable
                 >
                   <Component data={data} setAddCubeModal={setAddCubeModal} />
                 </div>
@@ -106,6 +62,16 @@ const Index = () => {
                       : "d-none"
                   }`}
                 ></div>
+                <FaPlus
+                  className={`plus-icon bottom-icon ${
+                    savedProtocols.length ? "d-block" : "d-none"
+                  }`}
+                  color="white"
+                  onClick={() => {
+                    setAddCubeModal(!addCubeModal);
+                  }}
+                  fontSize={26}
+                />
               </div>
             </Col>
           </Row>

@@ -5,7 +5,34 @@ import { CubeBodyStyled } from "./style";
 import useProtocolContext from "../../hooks/useProtocolContext";
 
 const CubeBody: React.FC<any> = () => {
-  const { toggleProtocoInputlBox } = useProtocolContext();
+  const { toggleProtocoInputlBox, savedProtocols } = useProtocolContext();
+
+  const isFlashLoanAvailable = (method: string) => {
+    if (method === "flashLoan") {
+      const flashLoanAvailable = savedProtocols.filter(
+        ({ methodName }: any) => methodName === method
+      );
+      console.log({ flashLoanAvailable });
+      return flashLoanAvailable.length > 0 ? true : false;
+    }
+    return false;
+  };
+  const flashLoanItems = () => {
+    const flashLoanFirst = savedProtocols.findIndex(
+      ({ methodName }: any) => methodName === "flashLoan"
+    );
+    const flashLoanLast = savedProtocols.findLastIndex(
+      ({ methodName }: any) => methodName === "flashLoan"
+    );
+    console.log(
+      savedProtocols.filter(
+        (_: any, index: number) =>
+          index > flashLoanFirst && index < flashLoanLast
+      ),
+      "flashLoan Items"
+    );
+  };
+  flashLoanItems();
 
   return (
     <CubeBodyStyled>
@@ -22,6 +49,7 @@ const CubeBody: React.FC<any> = () => {
                       onClick={() => toggleProtocoInputlBox(data)}
                       key={index}
                       className="method-btn w-100 mt-3"
+                      disabled={isFlashLoanAvailable(data.methodName)}
                     >
                       {data.name}
                     </button>

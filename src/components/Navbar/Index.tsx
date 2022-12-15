@@ -1,19 +1,19 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+import AppBar from "react-bootstrap/Navbar";
 import { NavLink } from "react-router-dom";
 import { NavbarStyled } from "./style";
 import { ConnectKitButton } from "connectkit";
 import { NavbarBrand } from "react-bootstrap";
 
-function Navbars() {
+function Navbar() {
   return (
     <NavbarStyled>
-      <Navbar bg="light" expand="lg">
+      <AppBar bg="light" expand="lg">
         <Container>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <AppBar.Toggle aria-controls="basic-navbar-nav" />
           <NavLink className="navbar-brand" to="/">
-            Demo
+            Flashup UI
           </NavLink>
           <NavbarBrand className="navbar-brand d-lg-none">
             <ConnectKitButton.Custom>
@@ -28,7 +28,7 @@ function Navbars() {
               }}
             </ConnectKitButton.Custom>
           </NavbarBrand>
-          <Navbar.Collapse id="basic-navbar-nav">
+          <AppBar.Collapse id="basic-navbar-nav">
             <Nav className="mx-auto d-flex justify-content-between">
               <NavLink className="nav-link" to="/strategies">
                 Strategies
@@ -40,9 +40,9 @@ function Navbars() {
                 Create
               </NavLink>
             </Nav>
-          </Navbar.Collapse>
+          </AppBar.Collapse>
           <NavbarBrand className="d-lg-block d-none">
-          <ConnectKitButton.Custom>
+            <ConnectKitButton.Custom>
               {({ isConnected, show, truncatedAddress, ensName }) => {
                 return (
                   <button onClick={show} className="connect-btn">
@@ -55,9 +55,9 @@ function Navbars() {
             </ConnectKitButton.Custom>
           </NavbarBrand>
         </Container>
-      </Navbar>
+      </AppBar>
     </NavbarStyled>
   );
 }
 
-export default Navbars;
+export default Navbar;

@@ -3,21 +3,26 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
-import { DraggableItemStyled } from "./style";
+import CreateItemStyle from "./style";
 import { FaRegEdit } from "react-icons/fa";
 import { BsFillTrashFill } from "react-icons/bs";
 
-type itemDataProp = {
-  data: { methodName: string; price: number; quantity: number,exchanger:string };
+type CreateItemProp = {
+  data: {
+    methodName: string;
+    price: number;
+    quantity: number;
+    exchanger: string;
+  };
 };
 
-const ListItem: React.FC<itemDataProp> = ({ data }) => {
-  const { methodName, price, quantity,exchanger } = data;
+const CreateItemBox: React.FC<CreateItemProp> = ({ data }) => {
+  const { methodName, price, quantity, exchanger } = data;
   return (
     <Container>
-      <DraggableItemStyled>
+      <CreateItemStyle>
         <Row className="align-items-center">
-          <Col md={4} className='d-flex justify-content-center'>
+          <Col md={4} className="d-flex justify-content-center">
             <div className="left-img">
               <img src={polygon} alt="polygon" />
             </div>
@@ -49,9 +54,9 @@ const ListItem: React.FC<itemDataProp> = ({ data }) => {
             </Card>
           </Col>
         </Row>
-      </DraggableItemStyled>
+      </CreateItemStyle>
     </Container>
   );
 };
 
-export default ListItem;
+export default CreateItemBox;

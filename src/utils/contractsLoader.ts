@@ -1,5 +1,5 @@
-import { HAaveFactory, proxyMockFactory } from "../contracts/Aava";
-import { hsCompoundFactory } from "../contracts/Compound";
+import { HAaveFactory, proxyMockFactory } from "../contracts_factories/aave";
+import { hsCompoundFactory } from "../contracts_factories/Compound";
 
 interface IContracts {
   [key: string]: Function;

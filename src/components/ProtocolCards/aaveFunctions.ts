@@ -1,7 +1,7 @@
 //  get Atoken symbol
 export const getATokenSymbol = (data: any, chain: any, formik: any) => {
   let aToken = data.function_configs.tokens[chain.toString() as string].find(
-    (tokenData: any) => tokenData.symbol === formik.values.inputsData[0].token
+    (tokenData: any) => tokenData.symbol === formik.values.token
   ).aTokenSymbol;
   return aToken;
 };
@@ -9,7 +9,7 @@ export const getATokenSymbol = (data: any, chain: any, formik: any) => {
 // getAToken address
 export const getATokenAddress = (data: any, chain: any, formik: any) => {
   let aToken = data.function_configs.tokens[chain.toString() as string].find(
-    (tokenData: any) => tokenData.symbol === formik.values.inputsData[0].token
+    (tokenData: any) => tokenData.symbol === formik.values.token
   ).aAddress;
   return aToken;
 };
@@ -21,7 +21,7 @@ export const getTokenDecimals = (
   formik: any
 ) => {
   const decimals = data.function_configs.tokens[chain].find(
-    ({ symbol }: any) => symbol === formik.values.inputsData[index].token
+    ({ symbol }: any) => symbol === formik.values.token
   ).decimals;
   console.log({ decimals });
   return decimals;
@@ -35,7 +35,7 @@ export const getTokenAddress = (
   formik: any
 ) => {
   const address = data.function_configs.tokens[chain].find(
-    ({ symbol }: any) => symbol === formik.values.inputsData[index].token
+    ({ symbol }: any) => symbol === formik.values.token
   ).address;
   return address;
 };
@@ -48,7 +48,7 @@ export const getStableDebt = (
   formik: any
 ) => {
   const address = data.function_configs.tokens[chain].find(
-    ({ symbol }: any) => symbol === formik.values.inputsData[index].token
+    ({ symbol }: any) => symbol === formik.values.token
   ).stableDebtTokenAddress;
   return address;
 };
@@ -62,7 +62,7 @@ export const getVariableDebt = (
   formik: any
 ) => {
   const address = data.function_configs.tokens[chain].find(
-    ({ symbol }: any) => symbol === formik.values.inputsData[index].token
+    ({ symbol }: any) => symbol === formik.values.token
   ).variableDebtTokenAddress;
   return address;
 };

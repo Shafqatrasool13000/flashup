@@ -1,6 +1,6 @@
 import { arrayify, parseEther } from "ethers/lib/utils";
 import { useCallback } from "react";
-import { proxyMockFactory } from "../contracts/Aava";
+import { proxyMockFactory } from "../contracts_factories/aave";
 import { ProxyMock } from "../typechain";
 import useSigner from "./useSigner";
 

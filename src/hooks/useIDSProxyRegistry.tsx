@@ -1,7 +1,7 @@
 import { constants } from "ethers";
 import { useCallback } from "react";
 import { IDSProxyRegistry } from "../typechain";
-import { idsProxyRegistryFactory } from "../contracts/Compound";
+import { idsProxyRegistryFactory } from "../contracts_factories/Compound";
 import useSigner from "./useSigner";
 
 const useIDSProxyRegistry = () => {

@@ -1,4 +1,4 @@
-import { SavedProtocolStyled } from "./style";
+import SavedProtocolStyle from "./style";
 import {
   FaArrowDown,
   FaEdit,
@@ -6,17 +6,43 @@ import {
   FaExclamation,
   FaTrash,
 } from "react-icons/fa";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import EditProtocol from "../EditProtocols/EditProtocol";
 import { Icon } from "@iconify/react";
 import useProtocolContext from "../../hooks/useProtocolContext";
+import { toast } from "react-toastify";
 
 const SavedProtocols = () => {
   const [editData, setEditData] = useState<any>(null);
   const [isEdit, setIsEdit] = useState<any>();
   const [editId, setEditId] = useState<any>();
-
   const { savedProtocols, setSavedProtocols, chainId } = useProtocolContext();
+
+  const dragItem = useRef<number | null>(null);
+  const dragOverItem = useRef<number | null>(null);
+
+  // 1.locate the item to be dragged
+  const dragStart = (e: React.DragEvent<HTMLDivElement>, position: any) => {
+    dragItem.current = position;
+    console.log(e.target, "event");
+  };
+
+  //2. Track items being dragged
+  const dragEnter = (e: React.DragEvent<HTMLDivElement>, position: any) => {
+    dragOverItem.current = position;
+    console.log(e.target, "event");
+  };
+
+  // 3.Rearrange the list
+  const drop = () => {
+    const copyListItems = [...savedProtocols];
+    const dragItemContent = copyListItems[dragItem.current as number];
+    copyListItems.splice(dragItem.current as number, 1);
+    copyListItems.splice(dragOverItem.current as number, 0, dragItemContent);
+    dragItem.current = null;
+    dragOverItem.current = null;
+    setSavedProtocols(copyListItems);
+  };
 
   // Edit Handler
   const handleEdit = (
@@ -33,24 +59,38 @@ const SavedProtocols = () => {
   // Delete Handler
   const handleDelete = (id: number) => {
     const filteredData = savedProtocols.filter(
-      ({ _ }: any, index: number) => index !== id
+      ({ protocol_id }: any) => protocol_id !== id
     );
     setSavedProtocols(filteredData);
   };
 
-  console.log({ editData }, "edit Data in Saved Protocols");
+  console.table(savedProtocols);
 
   return (
     <>
       <div>
-        <SavedProtocolStyled>
+        <SavedProtocolStyle>
           {(savedProtocols && savedProtocols.length) !== 0 && (
             <div className="list">
               {savedProtocols?.map((data: any, index: number) => {
                 const { protocol_id, initialData, function_configs, name } =
                   data;
                 return (
-                  <div key={index}>
+                  <div
+                    key={index}
+                    draggable
+                    onDragStart={(e) => dragStart(e, index)}
+                    onDragEnter={(e) => dragEnter(e, index)}
+                    onDragEnd={
+                      data.hasOwnProperty("notDraggable")
+                        ? () => {
+                            toast(
+                              "Borrow and Payback are paired. They must be in tact"
+                            );
+                          }
+                        : drop
+                    }
+                  >
                     <div
                       className={`mt-2 box ${
                         index === editId ? "d-none" : "d-block"
@@ -62,64 +102,68 @@ const SavedProtocols = () => {
                         <button className="method-btn w-100 mb-3 fs-6">
                           {name}
                         </button>
-                        <div className="action-btns">
-                          <FaEdit
-                            className="cursor-pointer"
-                            fontSize={20}
-                            onClick={() => {
-                              handleEdit(protocol_id, data, name, index);
-                              setEditData({ protocol_id, name, data });
-                            }}
-                          />
-                          <FaTrash
-                            className="ms-3 cursor-pointer"
-                            fontSize={20}
-                            onClick={() => handleDelete(index)}
-                          />
+                        {!data["flashLoan-end"] && (
+                          <div className="action-btns">
+                            <FaEdit
+                              className="cursor-pointer"
+                              fontSize={20}
+                              onClick={() => {
+                                handleEdit(protocol_id, data, name, index);
+                                setEditData({ protocol_id, name, data });
+                              }}
+                            />
+                            <FaTrash
+                              className="ms-3 cursor-pointer"
+                              fontSize={20}
+                              onClick={() => handleDelete(protocol_id)}
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <div
+                        key={index}
+                        className={`${
+                          data?.methodName == "flashLoan" ? "d-none" : "d-block"
+                        }`}
+                      >
+                        <div className="d-flex justify-content-between">
+                          <div className="chain d-flex align-items-center mb-2">
+                            <Icon
+                              icon={
+                                function_configs?.tokens[chainId]?.find(
+                                  ({ symbol }: any) =>
+                                    symbol === data.initialData.token
+                                )?.icon
+                              }
+                              width="24"
+                              height="24"
+                              color="white"
+                            />
+                            <p className="token ms-2 mt-1">
+                              {data.initialData.token}
+                            </p>
+                          </div>
+                          <p className="price ms-2 mt-1">
+                            {data.initialData.amount}
+                          </p>
+                        </div>
+                        <div
+                          className={`${
+                            data?.methodName == "flashLoan"
+                              ? "d-none"
+                              : "d-block"
+                          }`}
+                        >
+                          <div className="d-flex align-items-center">
+                            <FaArrowDown fontSize={20} className="ms-2" />
+                            <div className="bottom-border" />
+                          </div>
                         </div>
                       </div>
-                      {initialData?.map(
-                        ({ amount, token, tokenList }: any, index: number) => (
-                          <div key={index}>
-                            <div className="d-flex justify-content-between">
-                              <div className="chain d-flex align-items-center mb-2">
-                                <Icon
-                                  icon={
-                                    function_configs?.tokens[chainId]?.find(
-                                      ({ symbol }: any) => symbol === token
-                                    )?.icon
-                                  }
-                                  width="24"
-                                  height="24"
-                                  color="white"
-                                />
-                                <p className="token ms-2 mt-1">{token}</p>
-                              </div>
-                              <p className="price ms-2 mt-1">{amount}</p>
-                            </div>
-                            <div
-                              className={`${
-                                data?.hasOwnProperty("isFlashloan")
-                                  ? "d-none"
-                                  : "d-block"
-                              }`}
-                            >
-                              <div className="d-flex align-items-center">
-                                <FaArrowDown fontSize={20} className="ms-2" />
-                                <div className="bottom-border" />
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      )}
                       <div
                         key={index}
                         className={`d-flex justify-content-between 
-                            ${
-                              data?.hasOwnProperty("isFlashloan")
-                                ? "d-block"
-                                : "d-none"
-                            }`}
+                            ${data["flashLoan-start"] ? "d-block" : "d-none"}`}
                       >
                         <p className="ms-2 mt-1">aWeth | 3%</p>
                         <p className="price ms-2 mt-1">
@@ -128,9 +172,7 @@ const SavedProtocols = () => {
                       </div>
                       <div
                         className={`${
-                          data?.hasOwnProperty("isFlashloan")
-                            ? "d-none"
-                            : "d-block"
+                          data.methodName === "flashLoan" ? "d-none" : "d-block"
                         }`}
                       >
                         <div
@@ -145,50 +187,12 @@ const SavedProtocols = () => {
                         </div>
                       </div>
                     </div>
-                    <div
-                      className={`list mt-3 ${
-                        data?.hasOwnProperty("isFlashloan")
-                          ? "d-block"
-                          : "d-none"
-                      }`}
-                    >
-                      <div className="box">
-                        <div
-                          className={`head-bar d-flex justify-content-between isEdit`}
-                        >
-                          <button className="method-btn w-100 mb-3 fs-6">
-                            {name}
-                          </button>
-                        </div>
-                        <div>
-                          <div className="d-flex justify-content-between">
-                            <div className="chain d-flex align-items-center">
-                              <FaEthereum fontSize={24} />
-                              {/* <p className="token ms-2 mt-1">
-                                  {
-                                    data?.function_configs.inputs[
-                                      myChain
-                                    ][index].token
-                                  }
-                                </p> */}
-                            </div>
-                            {/* <p className="price ms-2 mt-1">
-                                {
-                                  data?.function_configs.inputs[
-                                    myChain
-                                  ][index].amount
-                                }
-                              </p> */}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 );
               })}
             </div>
           )}
-        </SavedProtocolStyled>
+        </SavedProtocolStyle>
       </div>
       <div className={`${isEdit ? "d-block" : "d-none"}`}>
         <EditProtocol

@@ -1,7 +1,7 @@
 import { parseUnits } from "ethers/lib/utils";
 import { useCallback } from "react";
 import { IStableDebtToken } from "../typechain";
-import { stableTokenFactory } from "../contracts/Aava";
+import { stableTokenFactory } from "../contracts_factories/aave";
 import useSigner from "./useSigner";
 
 const useStableToken = () => {

@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { HMock } from "../typechain";
-import { drainTokenFactory } from "../contracts/Aava";
+import { drainTokenFactory } from "../contracts_factories/aave";
 import useSigner from "./useSigner";
 
 const useDrainToken = () => {

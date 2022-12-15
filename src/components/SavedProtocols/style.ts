@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { secondaryDark } from "../Global";
 
-export const SavedProtocolStyled = styled.div`
+const SavedProtocolStyle = styled.div`
   margin-top: 24px;
 
   .list {
@@ -11,7 +11,23 @@ export const SavedProtocolStyled = styled.div`
       padding: 14px;
       border-radius: 7px;
       margin: 0 auto;
+      cursor: pointer;
 
+      .action-btns {
+        opacity: 0;
+        svg {
+          opacity: 0.7;
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+      &:hover {
+        .action-btns {
+          opacity: 1;
+          transition: all 200ms ease-in-out;
+        }
+      }
       .method-btn {
         color: white;
         padding: 3px 9px;
@@ -52,3 +68,5 @@ export const SavedProtocolStyled = styled.div`
     }
   }
 `;
+
+export default SavedProtocolStyle;

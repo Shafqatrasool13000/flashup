@@ -1,16 +1,16 @@
 import { BigNumber } from "ethers";
 import { aavaTestnetTokens, aaveMainnetTokens } from "../tokens/aava";
 
-const aave2ProtocolData = [
+const aaveProtocolData = [
   {
     name: "Deposit",
     methodName: "deposit",
     signature: "",
     description: "",
     tag: [],
-    protocolName: "Aava 2",
+    protocolName: "Aave",
     protocolLogo: "",
-    initialData: [{ token: "DAI", amount: "", showTokens: false }],
+    initialData: { token: "DAI", amount: "", showTokens: false },
     function_configs: {
       tokens: {
         "1": aaveMainnetTokens,
@@ -48,9 +48,9 @@ const aave2ProtocolData = [
     signature: "",
     description: "",
     tag: "",
-    protocolName: "Aava 2",
+    protocolName: "Aave",
     protocolLogo: "",
-    initialData: [{ token: "USDT", amount: "", showTokens: false }],
+    initialData: { token: "USDT", amount: "", showTokens: false },
     function_configs: {
       tokens: {
         "1": aaveMainnetTokens,
@@ -79,16 +79,14 @@ const aave2ProtocolData = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "Aava 2",
+    protocolName: "Aave",
     protocolLogo: "",
-    initialData: [
-      {
-        token: "USDT",
-        amount: "",
-        showTokens: false,
-        rateMode: BigNumber.from(2),
-      },
-    ],
+    initialData: {
+      token: "USDT",
+      amount: "",
+      showTokens: false,
+      rateMode: BigNumber.from(2),
+    },
     function_configs: {
       tokens: {
         "1": aaveMainnetTokens,
@@ -135,17 +133,15 @@ const aave2ProtocolData = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "Aava 2",
+    protocolName: "Aave",
     protocolLogo: "",
-    initialData: [
-      {
-        token: "USDT",
-        amount: "",
-        showTokens: false,
-        rateMode: BigNumber.from(2),
-        // onBehalfOf: +true,
-      },
-    ],
+    initialData: {
+      token: "USDT",
+      amount: "",
+      showTokens: false,
+      rateMode: BigNumber.from(2),
+      // onBehalfOf: +true,
+    },
     function_configs: {
       tokens: {
         "1": aaveMainnetTokens,
@@ -192,19 +188,18 @@ const aave2ProtocolData = [
     methodName: "flashLoan",
     description: "",
     tag: "",
-    protocolName: "Aava 2",
+    protocolName: "Aave",
     protocolLogo: "",
-    initialData: [
-      {
-        token: "USDT",
-        amount: "",
-        assets: [],
-        amounts: [],
-        modes: [],
-        params: [],
-        showTokens: false,
-      },
-    ],
+    initialData: {
+      token: "USDT",
+      amount: "",
+      assets: [],
+      amounts: [],
+      modes: [],
+      params: [],
+      showTokens: false,
+    },
+
     function_configs: {
       tokens: {
         "1": aaveMainnetTokens,
@@ -235,13 +230,11 @@ const aave2ProtocolData = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "Aava 2",
+    protocolName: "Aave",
     protocolLogo: "",
-    initialData: [
-      {
-        amount: "",
-      },
-    ],
+    initialData: {
+      amount: "",
+    },
     function_configs: {
       tokens: {
         "1": aaveMainnetTokens,
@@ -265,20 +258,18 @@ const aave2ProtocolData = [
       "5": "0x4bd5643ac6f66a5237E18bfA7d47cF22f1c9F210",
     },
   },
-
   {
     name: "WithdrawETH",
     methodName: "withdrawETH",
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "Aava 2",
+    protocolName: "Aave",
     protocolLogo: "",
-    initialData: [
-      {
-        amount: "",
-      },
-    ],
+    initialData: {
+      amount: "",
+    },
+
     function_configs: {
       tokens: {
         "1": aaveMainnetTokens,
@@ -308,13 +299,12 @@ const aave2ProtocolData = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "Aava 2",
+    protocolName: "Aave",
     protocolLogo: "",
-    initialData: [
-      {
-        amount: "",
-      },
-    ],
+    initialData: {
+      amount: "",
+    },
+
     function_configs: {
       tokens: {
         "1": aaveMainnetTokens,
@@ -344,14 +334,12 @@ const aave2ProtocolData = [
     signature: () => console.log(""),
     description: "",
     tag: "",
-    protocolName: "Aava 2",
+    protocolName: "Aave",
     protocolLogo: "",
-    initialData: [
-      {
-        amount: "",
-        rate: 1,
-      },
-    ],
+    initialData: {
+      amount: "",
+      rate: 1,
+    },
     function_configs: {
       tokens: {
         "1": aaveMainnetTokens,
@@ -377,4 +365,4 @@ const aave2ProtocolData = [
   },
 ];
 
-export default aave2ProtocolData;
+export default aaveProtocolData;
