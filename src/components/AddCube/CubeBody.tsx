@@ -3,11 +3,17 @@ import HeadBar from "./HeadBar";
 import { protocolsData } from "../../utils/ProtocolsData/ProtocolsData";
 import { CubeBodyStyled } from "./style";
 import useProtocolContext from "../../hooks/useProtocolContext";
+import { useEffect } from "react";
 
 const CubeBody: React.FC<any> = () => {
-  const { toggleProtocoInputlBox, savedProtocols } = useProtocolContext();
+  const {
+    toggleProtocoInputlBox,
+    addCubeModal,
+    savedProtocols,
+    setFlashLoanItems,
+  } = useProtocolContext();
 
-  const isFlashLoanAvailable = (method: string) => {
+  const isFlashLoanAvailable = (method: string): boolean => {
     if (method === "flashLoan") {
       const flashLoanAvailable = savedProtocols.filter(
         ({ methodName }: any) => methodName === method
@@ -17,22 +23,26 @@ const CubeBody: React.FC<any> = () => {
     }
     return false;
   };
-  const flashLoanItems = () => {
+  const flashLoanItems = (): any => {
     const flashLoanFirst = savedProtocols.findIndex(
       ({ methodName }: any) => methodName === "flashLoan"
     );
     const flashLoanLast = savedProtocols.findLastIndex(
       ({ methodName }: any) => methodName === "flashLoan"
     );
-    console.log(
+    console.log(flashLoanFirst, flashLoanLast);
+
+    setFlashLoanItems(
       savedProtocols.filter(
         (_: any, index: number) =>
           index > flashLoanFirst && index < flashLoanLast
-      ),
-      "flashLoan Items"
+      )
     );
+    return flashLoanItems;
   };
-  flashLoanItems();
+  useEffect(() => {
+    flashLoanItems();
+  }, [addCubeModal, savedProtocols]);
 
   return (
     <CubeBodyStyled>

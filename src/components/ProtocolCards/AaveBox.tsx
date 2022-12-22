@@ -3,29 +3,23 @@ import { Col, Row } from "react-bootstrap";
 import {
   FaArrowAltCircleLeft,
   FaArrowDown,
-  // FaBehanceSquare,
-  // FaBitbucket,
-  // FaBullseye,
   FaCannabis,
   FaCaretDown,
-  FaPlus,
 } from "react-icons/fa";
 import { useExecMock } from "../../hooks/useExecMock";
 import ASelectToken from "../SelectToken/AavaSelect";
 import { RateModeStyled } from "../AddCube/style";
 import { Spin, Switch } from "antd";
 import { Icon } from "@iconify/react";
-import { useFormik, FormikProvider, Form, FieldArray } from "formik";
+import { useFormik, FormikProvider, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../InputField/InputField";
-import { GetBalance } from "../GetBalance/Index";
+import { GetBalance } from "./GetBalance/Index";
 import GetLtv from "../../hooks/GetLtv";
 import UseApy from "../../utils/graphql/useApy";
 import { LoadingOutlined } from "@ant-design/icons";
-import addresses from "../../utils/contractsAddress";
 import { useEncode } from "../../hooks/useEncode";
 import useApprove from "../../hooks/useApprove";
-import { AddProtocolInitValues } from "../../utils/types";
 import { toast } from "react-toastify";
 import { BigNumber } from "ethers";
 import useTransfer from "../../hooks/useTransfer";
@@ -39,19 +33,14 @@ import {
   getVariableDebt,
   getATokenAddress,
 } from "./aaveFunctions";
-import {
-  AbiCoder,
-  BytesLike,
-  formatBytes32String,
-  parseEther,
-  parseUnits,
-} from "ethers/lib/utils";
+import { parseEther, parseUnits } from "ethers/lib/utils";
 import useDrainToken from "../../hooks/useDrainToken";
 import useProtocolContext from "../../hooks/useProtocolContext";
 import CustomButton from "../Custom/CustomButton/CustomButton";
 import { primaryColor } from "../Global";
 import AddProtocolStyled from "./style";
 import useAllowance from "../../hooks/useAllowance";
+import contractsAddress from "../../utils/contractsAddress";
 
 const AaveBox = ({ data, setAddCubeModal }: any) => {
   const protocol_id = useId();
@@ -67,6 +56,8 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
     setExchageItems,
     addCubeModal,
     exchangeItems,
+    allowance: isAllowance,
+    setAllowance,
   } = useProtocolContext();
 
   console.log({ isApprove }, "isApprove");
@@ -92,11 +83,11 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
   const approveSwitcher = (methodName: string) => {
     switch (methodName) {
       case "deposit":
-        return getTokenAddress(data, chainId, 0, formik);
+        return getTokenAddress(data, chainId, formik);
       case "withdraw":
         return getATokenAddress(data, chainId, formik);
       default:
-        return getTokenAddress(data, chainId, 0, formik);
+        return getTokenAddress(data, chainId, formik);
     }
   };
 
@@ -125,18 +116,19 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
     }
   };
 
-  const abiCoder = new AbiCoder();
-
   // Hooks
 
-  const encoder = useEncode();
+  const bytesEncoder = useEncode();
   const execMock = useExecMock();
   const approve = useApprove();
   const transfer = useTransfer();
   const stableToken = useStableToken();
   const variableToken = useVariableToken();
-  const drainToken = useDrainToken();
   const allowance = useAllowance();
+
+  useEffect(() => {
+    allowance("0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33");
+  }, [formik.values.amount, data]);
 
   // Approve Hanlder
   const approveHandler = () => {
@@ -147,27 +139,27 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
     if (formik.values.rateMode) {
       formik.values.rateMode.toNumber() === 1
         ? stableToken(
-            addresses.proxyMockAddress,
+            contractsAddress.proxyMockAddress,
             parseUnits(
               formik.values.amount.toString(),
-              getTokenDecimals(data, chainId, 0, formik)
+              getTokenDecimals(data, chainId, formik)
             ),
-            getStableDebt(data, chainId, 0, formik),
-            getTokenDecimals(data, chainId, 0, formik)
+            getStableDebt(data, chainId, formik),
+            getTokenDecimals(data, chainId, formik)
           )
         : variableToken(
-            addresses.proxyMockAddress,
+            contractsAddress.proxyMockAddress,
             formik.values.amount,
-            getVariableDebt(data, chainId, 0, formik),
-            getTokenDecimals(data, chainId, 0, formik)
+            getVariableDebt(data, chainId, formik),
+            getTokenDecimals(data, chainId, formik)
           );
     } else {
       approve(
         approveSwitcher(data.methodName),
-        addresses.proxyMockAddress,
+        contractsAddress.proxyMockAddress,
         parseUnits(
           formik.values.amount.toString(),
-          getTokenDecimals(data, chainId, 0, formik)
+          getTokenDecimals(data, chainId, formik)
         )
       );
     }
@@ -181,10 +173,10 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
   //     return;
   //   }
   //   const result = await transfer(
-  //     getTokenAddress(data, chainId, 0, formik),
-  //     addresses.proxyMockAddress,
+  //     getTokenAddress(data, chainId, formik),
+  //    contractsAddress.proxyMockAddress,
   //     formik.values.amount,
-  //     getTokenDecimals(data, chainId, 0, formik)
+  //     getTokenDecimals(data, chainId, formik)
   //   );
   //   return result;
   // };
@@ -205,39 +197,42 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
       );
       EthMethodSwitcher(data.methodName) &&
         (finalProtcoloData[0]["others"] = EthMethodSwitcher(data.methodName));
-      var encoded = encoder(addresses.haaveAddress, data.methodName, [
-        ...Object.values(finalProtcoloData[0]),
-      ]);
-      console.log({ finalProtcoloData });
-      console.log({ encoded });
-      execMock(addresses.haaveAddress, encoded, formik.values.amount);
-    } else {
-      finalProtcoloData = Object.values(
-        formik.values.map((objData: any, index: number) => {
-          delete objData["showTokens"];
-          return {
-            ...objData,
-            token: getTokenAddress(data, chainId, 0, formik),
-            amount: parseUnits(
-              formik.values.amount.toString(),
-              getTokenDecimals(data, chainId, index, formik)
-            ),
-            userAddress,
-          };
-        })
+      var encodedBytes = bytesEncoder(
+        contractsAddress.haaveAddress,
+        data.methodName,
+        [...Object.values(finalProtcoloData[0])]
       );
-      console.log({ finalProtcoloData }, "at inital");
-      executionSwitcher(data.methodName) &&
-        (finalProtcoloData[0]["exec"] = executionSwitcher(data.methodName));
-      var encoded = encoder(addresses.haaveAddress, data.methodName, [
-        ...Object.values(finalProtcoloData[0]),
-      ]);
-      execMock(addresses.haaveAddress, encoded);
+      // execMock(
+      //   contractsAddress.haaveAddress,
+      //   encodedBytes,
+      //   formik.values.amount
+      // );
+    } else {
+      delete formik.values["showTokens"];
+      finalProtcoloData = {
+        ...formik.values,
+        token: getTokenAddress(data, chainId, formik),
+        amount: parseUnits(
+          formik.values.amount.toString(),
+          getTokenDecimals(data, chainId, formik)
+        ),
+      };
 
-      console.log({ finalProtcoloData });
+      finalProtcoloData["userAddress"] = userAddress;
+      executionSwitcher(data.methodName) &&
+        (finalProtcoloData["exec"] = executionSwitcher(data.methodName));
+
+      const encodedBytes = bytesEncoder(
+        contractsAddress.haaveAddress,
+        data.methodName,
+        Object.values(finalProtcoloData)
+      );
+      console.log({ encodedBytes });
+      return encodedBytes;
+      // execMock(contractsAddress.haaveAddress, encodedBytes);
     }
 
-    // console.log({ finalProtcoloData });
+    console.log(finalProtcoloData);
 
     // const encoded = encoder(addresses.haaveAddress, "withdrawETH", [
     //   parseEther("0.1"),
@@ -254,8 +249,11 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
   // Submit Handler
 
   async function onSubmit() {
-    const newProtocol = { ...data };
+    const encodeData = await executionHandler();
+    const newProtocol = { ...data, encodeData };
     newProtocol["initialData"] = formik.values;
+    newProtocol["protocol_id"] = protocol_id;
+
     if (data.methodName == "flashLoan") {
       setSavedProtocols((oldData: any) => [
         ...oldData,
@@ -277,53 +275,16 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
           protocol_id: protocol_id,
         },
       ]);
-      // delete newProtocol["flashLoan-start"];
     } else {
       setSavedProtocols((oldData: any) => [...oldData, newProtocol]);
     }
     setExchageItems([]);
-    // if (data.methodName === "flashLoan") {
-    //   const drainTokenResult = drainToken(
-    //     [addresses.faucet],
-    //     [getTokenAddress(data, chainId, 0, formik)],
-    //     [
-    //       parseUnits(
-    //         formik.values.amount.toString(),
-    //         getTokenDecimals(data, chainId, 0, formik)
-    //       ),
-    //     ]
-    //   );
-    //   const encodedAbi = abiCoder.encode(
-    //     ["address[]", "bytes32[]", "bytes[]"],
-    //     [
-    //       [addresses.hMock],
-    //       [formatBytes32String("")],
-    //       [drainTokenResult as BytesLike],
-    //     ]
-    //   );
-    //   console.log({ drainTokenResult, encodedAbi });
-    //   const encoded = encoder(addresses.haaveAddress, data.methodName, [
-    //     [getTokenAddress(data, chainId, 0, formik)],
-    //     [
-    //       parseUnits(
-    //         formik.values.amount.toString(),
-    //         getTokenDecimals(data, chainId, 0, formik)
-    //       ),
-    //     ],
-    //     [BigNumber.from("0")],
-    //     encodedAbi as BytesLike,
-    //   ]);
-    //   console.log({ encoded }, "finalEncodedData data ...");
-
-    //   execMock(addresses.haaveAddress, encoded);
-    // } else {
-    //   return;
-    // }
   }
 
   // Token Toggle Handler
   const handleTokensToggle = () => {
     formik.setFieldValue("showTokens", !formik.values.showTokens);
+    console.log(formik.values.showTokens, "show tokens");
   };
 
   const { totalData, loading, error } = UseApy(
@@ -364,24 +325,21 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
         }
       );
     }
-  }, [data, formik.values.token, loading]);
+  }, [data, formik.values, loading]);
 
   const repayHandler = () => {
     formik.values.onBehalfOf = userAddress;
     return null;
   };
-  useEffect(() => {
-    if (formik.values.onBehalfOf) repayHandler();
-  }, []);
 
   const getAllowance = (amount: number): void => {
     setIsApprove(amount > 0 ? true : false);
   };
   // useEffect(() => {
   //   allowance(
-  //     getTokenAddress(data, chainId, 0, formik),
+  //     getTokenAddress(data, chainId, formik),
   //     userAddress,
-  //     addresses.proxyMockAddress,
+  //    contractsAddress.proxyMockAddress,
   //     getAllowance
   //   );
   // }, [formik.values]);
@@ -480,14 +438,13 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
                         formik.values.showTokens ? "d-block" : "d-none"
                       }`}
                     >
-                      {/* <ASelectToken
+                      <ASelectToken
                         showTokens={formik.values.showTokens}
                         tokens={data?.function_configs.tokens[chainId]}
-                        index={0}
-                        name='token'
+                        name="token"
                         formik={formik}
                         handleTokensToggle={handleTokensToggle}
-                      /> */}
+                      />
                     </div>
                     <span
                       className={`input-text ${
@@ -514,7 +471,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
                             ({ symbol }: any) => symbol === formik.values.token
                           )?.address
                         }
-                        decimal={getTokenDecimals(data, chainId, 0, formik)}
+                        decimal={getTokenDecimals(data, chainId, formik)}
                       />
                       <button className="max-btn" type="button">
                         Max
@@ -604,7 +561,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
         </AddProtocolStyled>
       </Form>
       <div className="icon-container">
-        <FaPlus
+        {/* <FaPlus
           className={`plus-icon top-icon ${
             (exchangeItems.length || savedProtocols.length) && "d-none"
           }`}
@@ -613,7 +570,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
             setAddCubeModal(!addCubeModal);
           }}
           fontSize={26}
-        />
+        /> */}
         <div
           className={`bottom-icon ${
             exchangeItems.length || savedProtocols.length ? "d-flex" : "d-none"
@@ -630,7 +587,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
               title="Approve"
               fontSize="12px"
               borderRadius="50%"
-              disabled={isApprove}
+              // disabled={+isAllowance! > 0 && true}
               clicked={approveHandler}
             />
           </div>
@@ -655,9 +612,9 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
               borderRadius="50%"
               // disabled={
               // async()=> ( await allowance(
-              //   getTokenAddress(data, chainId, 0, formik),
+              //   getTokenAddress(data, chainId, formik),
               //   userAddress,
-              //   getTokenAddress(data, chainId, 0, formik)
+              //   getTokenAddress(data, chainId, formik)
               // ) > 0)
               //   ? true
               //   : false
@@ -668,23 +625,6 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
               }}
             />
           </div>
-          {/* <FaPlus
-            className="ms-3"
-            color="white"
-            onClick={() => {
-              setAddCubeModal(!addCubeModal);
-              setExchageItems([]);
-            }}
-            fontSize={26}
-            title="Add"
-          /> */}
-          {/* <FaBehanceSquare
-            className="ms-3"
-            color="white"
-            onClick={executionHandler}
-            fontSize={26}
-            title="Execute"
-          /> */}
           <div className="ms-3">
             <CustomButton
               bgcolor={primaryColor}

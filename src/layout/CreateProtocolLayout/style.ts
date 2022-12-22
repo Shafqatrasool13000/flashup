@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { primaryColor } from "../../components/Global";
 
-export const CreateLayoutStyled = styled.div`
+const CreateProtocolLayoutStyle = styled.div`
   padding-bottom: 60px;
   position: relative;
 
@@ -63,3 +63,5 @@ export const CreateLayoutStyled = styled.div`
     }
   }
 `;
+
+export default CreateProtocolLayoutStyle;

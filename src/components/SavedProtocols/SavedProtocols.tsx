@@ -108,8 +108,9 @@ const SavedProtocols = () => {
                               className="cursor-pointer"
                               fontSize={20}
                               onClick={() => {
-                                handleEdit(protocol_id, data, name, index);
-                                setEditData({ protocol_id, name, data });
+                                console.log("EDIT");
+                                // handleEdit(protocol_id, data, name, index);
+                                // setEditData({ protocol_id, name, data });
                               }}
                             />
                             <FaTrash

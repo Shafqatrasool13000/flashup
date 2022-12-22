@@ -318,6 +318,7 @@ const aavaTestnetTokens = [
     variableDebtTokenAddress: "0x531842cEbbdD378f8ee36D171d6cC9C4fcf475Ec",
     icon: "cryptocurrency:aave",
     address: "0x5010abCF8A1fbE56c096DCE9Bb2D29d63e141361",
+    aAddress: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
     decimals: 18,
   },
   {

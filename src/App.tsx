@@ -5,7 +5,7 @@ import "antd/dist/antd.css";
 import Navbar from "./components/Navbar/Index";
 import { Routes, Route } from "react-router-dom";
 import Footer from "./components/Footer/Index";
-import Create from "./layout/Create/Index";
+import Create from "./layout/CreateProtocolLayout/CreateLayout";
 import Strategies from "./layout/Strategies/Index";
 import Opportunities from "./layout/Opportunities/Index";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";

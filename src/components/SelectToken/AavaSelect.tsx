@@ -9,7 +9,6 @@ const ASelectToken: React.FC<any> = ({
   showTokens,
   handleTokensToggle,
   tokens,
-  index,
   name,
   formik,
 }) => {
@@ -31,10 +30,10 @@ const ASelectToken: React.FC<any> = ({
         showSearch
         style={{ width: 410 }}
         placeholder="Select Token"
-        defaultValue={formik.values.inputsData[index].token}
+        defaultValue={formik.values.token}
         optionFilterProp="children"
         optionLabelProp="label"
-        onBlur={() => handleTokensToggle(index)}
+        onBlur={() => handleTokensToggle()}
         open={showTokens}
         onChange={(value) => {
           formik.setFieldValue(name, value);

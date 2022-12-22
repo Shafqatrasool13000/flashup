@@ -12,6 +12,10 @@ export type Context_Api_Data = {
   setAddCubeModal: any;
   toggleProtocoInputlBox: any;
   setUserAddress: React.Dispatch<React.SetStateAction<string>>;
+  allowance: string;
+  setAllowance: React.Dispatch<React.SetStateAction<string>>;
+  flashLoanItems: any;
+  setFlashLoanItems: any;
 };
 
 export type ProtocolContextProps = {
