@@ -14,19 +14,28 @@ import { AbiCoder, BytesLike, formatBytes32String, parseUnits } from 'ethers/lib
 //   getTokenDecimals,
 // } from "../../components/ProtocolCards/aaveFunctions";
 import { BigNumber } from 'ethers';
-import useDrainToken from '../../hooks/useDrainToken';
 import { useEncode } from '../../hooks/useEncode';
 import { useExecMock } from '../../hooks/useExecMock';
 
 const CreateProtocolLayout = () => {
   const abiCoder = new AbiCoder();
-  const drainToken = useDrainToken();
   const bytesEncoder = useEncode();
   const execMock = useExecMock();
 
-  const { savedProtocols, exchangeItems, addCubeModal, setAddCubeModal, flashLoanItems } =
-    useProtocolContext();
+  const ProtocolAddresses: any = {
+    Aave: contractsAddress.haaveAddress,
+    Compound: contractsAddress.haaveAddress
+  };
 
+  const {
+    savedProtocols,
+    exchangeItems,
+    addCubeModal,
+    setAddCubeModal,
+    flashLoanItems,
+    setExchageItems
+  } = useProtocolContext();
+  console.log({ flashLoanItems });
   console.log;
   function flashLoanSubmit() {
     // formik: any,
@@ -38,9 +47,7 @@ const CreateProtocolLayout = () => {
     const encodedAbi = abiCoder.encode(
       ['address[]', 'bytes32[]', 'bytes[]'],
       [
-        flashLoanItems.map(({ protocolName }: any) =>
-          protocolName == 'Aave' ? contractsAddress.haaveAddress : contractsAddress.hsCompondAddress
-        ),
+        flashLoanItems.map(({ protocolName }: any) => ProtocolAddresses[protocolName]),
         flashLoanItems.map((_: any) => formatBytes32String('')),
         flashLoanItems.map(({ encodeData }: { encodeData: string }) => encodeData as BytesLike)
       ]
@@ -92,48 +99,39 @@ const CreateProtocolLayout = () => {
                   cursor: 'pointer'
                 }}
                 ref={messagesEndRef}>
-                <Component data={data} setAddCubeModal={setAddCubeModal} />
+                <Component data={data} />
               </div>
             ))}
             <div className="icon-container">
               <FaPlus
-                className={`plus-icon top-icon ${
+                className={`action-icon top-icon ${
                   (exchangeItems.length || savedProtocols.length) && 'd-none'
                 }`}
                 color="white"
                 onClick={() => {
                   setAddCubeModal(!addCubeModal);
                 }}
-                fontSize={26}
+                fontSize={20}
               />
               <div
-                className={`bottom-icon ${
-                  exchangeItems.length || savedProtocols.length ? 'd-flex' : 'd-none'
-                }`}
-              />
-              <div className="d-flex">
-                <FaExchangeAlt
-                  className={`plus-icon bottom-icon ${exchangeItems.length ? 'd-none' : 'd-block'}`}
-                  color="white"
-                  onClick={() => flashLoanSubmit()}
-                  fontSize={26}
-                />
-                <FaPlus
-                  className={`plus-icon bottom-icon ms-5 ${
-                    savedProtocols.length && !exchangeItems.length ? 'd-block' : 'd-none'
-                  }`}
-                  color="white"
-                  onClick={() => {
-                    setAddCubeModal(!addCubeModal);
-                  }}
-                  fontSize={26}
-                />
+                onClick={() => flashLoanSubmit()}
+                className={`action-icon execute-icon ${
+                  !flashLoanItems.length ? 'd-none' : 'd-block'
+                }`}>
+                <FaExchangeAlt color="white" fontSize={20} />
+              </div>
+              <div
+                className="action-icon plus-icon"
+                onClick={() => {
+                  setAddCubeModal(!addCubeModal);
+                }}>
+                <FaPlus color="white" fontSize={26} />
               </div>
             </div>
           </Col>
         </Row>
       </Container>
-      <AddCube addCubeModal={addCubeModal} setAddCubeModal={setAddCubeModal}>
+      <AddCube>
         <CubeBody />
       </AddCube>
     </CreateProtocolLayoutStyle>

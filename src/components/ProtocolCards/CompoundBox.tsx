@@ -139,12 +139,12 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
     const encodeData = await executionHandler();
     console.log({ data }, 'data in onsubmit in compound');
     const newProtocol = { ...data, initialData: formik.values.tokensData[0] };
-    newProtocol[protocol_id] = protocol_id;
     var encoded = encoder(contractsAddress.hsCompondAddress, data.methodName, [
       await handleUserProxy(),
       getTokenAddress(data, chainId, 0, formik)
     ]);
     newProtocol['encodeData'] = encodeData;
+    newProtocol['protocol_id'] = protocol_id;
     setSavedProtocols((prevSavedData: any) => [...prevSavedData, newProtocol]);
     // execMock(
     //   contractsAddress.hsCompondAddress,
@@ -389,7 +389,7 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
             <div className="bottom-section mt-2">
               {data?.attributes?.map(({ name, value }: any, index: number) => (
                 <div key={index} className="d-flex justify-content-between align-items-center">
-                  <p className="fs-6 mb-0 mt-">{name}</p>
+                  <p className="fs-6 mb-0 ">{name}</p>
                   <p className="fs-6 mb-0 mt-1">
                     {loading ? <Spin indicator={antIcon} /> : error ? 'N/A' : value + '%'}{' '}
                   </p>
@@ -447,57 +447,6 @@ const CompoundBox = ({ data, setAddCubeModal }: any) => {
               clicked={transferHandler}
             />
           </div>
-          {/* <FaBitbucket
-            className=""
-            color="white"
-            onClick={approveHandler}
-            fontSize={26}
-            title="Approve"
-          /> */}
-
-          <div className="">
-            <CustomButton
-              bgcolor={primaryColor}
-              color="white"
-              padding="8px 8px"
-              width="60px"
-              height="60px"
-              type="submit"
-              title="Add"
-              fontSize="12px"
-              borderRadius="50%"
-              // disabled={
-              // async()=> ( await allowance(
-              //   getTokenAddress(data, chainId, 0, formik),
-              //   userAddress,
-              //   getTokenAddress(data, chainId, 0, formik)
-              // ) > 0)
-              //   ? true
-              //   : false
-              // }
-              clicked={() => {
-                setAddCubeModal(!addCubeModal);
-                setExchageItems([]);
-              }}
-            />
-          </div>
-          {/* <FaPlus
-            className="ms-3"
-            color="white"
-            onClick={() => {
-              setAddCubeModal(!addCubeModal);
-              setExchageItems([]);
-            }}
-            fontSize={26}
-            title="Add"
-          /> */}
-          {/* <FaBehanceSquare
-            className="ms-3"
-            color="white"
-            onClick={executionHandler}
-            fontSize={26}
-            title="Execute"
-          /> */}
           <div className="ms-3">
             <CustomButton
               bgcolor={primaryColor}

@@ -1,46 +1,41 @@
-import { useEffect, useId, useState } from "react";
-import { Col, Row } from "react-bootstrap";
-import {
-  FaArrowAltCircleLeft,
-  FaArrowDown,
-  FaCannabis,
-  FaCaretDown,
-} from "react-icons/fa";
-import { useExecMock } from "../../hooks/useExecMock";
-import ASelectToken from "../SelectToken/AavaSelect";
-import { RateModeStyled } from "../AddCube/style";
-import { Spin, Switch } from "antd";
-import { Icon } from "@iconify/react";
-import { useFormik, FormikProvider, Form } from "formik";
-import * as Yup from "yup";
-import InputField from "../InputField/InputField";
-import { GetBalance } from "./GetBalance/Index";
-import GetLtv from "../../hooks/GetLtv";
-import UseApy from "../../utils/graphql/useApy";
-import { LoadingOutlined } from "@ant-design/icons";
-import { useEncode } from "../../hooks/useEncode";
-import useApprove from "../../hooks/useApprove";
-import { toast } from "react-toastify";
-import { BigNumber } from "ethers";
-import useTransfer from "../../hooks/useTransfer";
-import useStableToken from "../../hooks/useStableToken";
-import useVariableToken from "../../hooks/useVariableToken";
+import { useEffect, useId, useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { FaArrowAltCircleLeft, FaArrowDown, FaCannabis, FaCaretDown } from 'react-icons/fa';
+import { useExecMock } from '../../hooks/useExecMock';
+import ASelectToken from '../SelectToken/AavaSelect';
+import { RateModeStyled } from '../AddCube/style';
+import { Spin, Switch } from 'antd';
+import { Icon } from '@iconify/react';
+import { useFormik, FormikProvider, Form } from 'formik';
+import * as Yup from 'yup';
+import InputField from '../InputField/InputField';
+import { GetBalance } from './GetBalance/Index';
+import GetLtv from '../../hooks/GetLtv';
+import UseApy from '../../utils/graphql/useApy';
+import { LoadingOutlined } from '@ant-design/icons';
+import { useEncode } from '../../hooks/useEncode';
+import useApprove from '../../hooks/useApprove';
+import { toast } from 'react-toastify';
+import { BigNumber } from 'ethers';
+import useTransfer from '../../hooks/useTransfer';
+import useStableToken from '../../hooks/useStableToken';
+import useVariableToken from '../../hooks/useVariableToken';
 import {
   getTokenAddress,
   getATokenSymbol,
   getStableDebt,
   getTokenDecimals,
   getVariableDebt,
-  getATokenAddress,
-} from "./aaveFunctions";
-import { parseEther, parseUnits } from "ethers/lib/utils";
-import useDrainToken from "../../hooks/useDrainToken";
-import useProtocolContext from "../../hooks/useProtocolContext";
-import CustomButton from "../Custom/CustomButton/CustomButton";
-import { primaryColor } from "../Global";
-import AddProtocolStyled from "./style";
-import useAllowance from "../../hooks/useAllowance";
-import contractsAddress from "../../utils/contractsAddress";
+  getATokenAddress
+} from './aaveFunctions';
+import { parseEther, parseUnits } from 'ethers/lib/utils';
+import useDrainToken from '../../hooks/useDrainToken';
+import useProtocolContext from '../../hooks/useProtocolContext';
+import CustomButton from '../Custom/CustomButton/CustomButton';
+import { primaryColor } from '../Global';
+import AddProtocolStyled from './style';
+import useAllowance from '../../hooks/useAllowance';
+import contractsAddress from '../../utils/contractsAddress';
 
 const AaveBox = ({ data, setAddCubeModal }: any) => {
   const protocol_id = useId();
@@ -57,10 +52,10 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
     addCubeModal,
     exchangeItems,
     allowance: isAllowance,
-    setAllowance,
+    setAllowance
   } = useProtocolContext();
 
-  console.log({ isApprove }, "isApprove");
+  console.log({ isApprove }, 'isApprove');
 
   // Initial Values
 
@@ -69,22 +64,22 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
   // validate Values
 
   const validationSchema = Yup.object({
-    amount: Yup.string().required("amount is required"),
+    amount: Yup.string().required('amount is required')
   });
 
   // Formik Hanlder
   const formik = useFormik({
     initialValues,
     onSubmit,
-    validationSchema,
+    validationSchema
   });
 
   // Approve Switcher
   const approveSwitcher = (methodName: string) => {
     switch (methodName) {
-      case "deposit":
+      case 'deposit':
         return getTokenAddress(data, chainId, formik);
-      case "withdraw":
+      case 'withdraw':
         return getATokenAddress(data, chainId, formik);
       default:
         return getTokenAddress(data, chainId, formik);
@@ -94,7 +89,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
   // Execution Switcher
   const executionSwitcher = (methodName: string) => {
     switch (methodName) {
-      case "withdraw":
+      case 'withdraw':
         return getATokenAddress(data, chainId, formik);
       default:
         return null;
@@ -105,11 +100,11 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
 
   const EthMethodSwitcher = (methodName: string) => {
     switch (methodName) {
-      case "repayETH":
+      case 'repayETH':
         return userAddress;
-      case "withdrawETH":
-        return "0xe91D55AB2240594855aBd11b3faAE801Fd4c4687";
-      case "borrowETH":
+      case 'withdrawETH':
+        return '0xe91D55AB2240594855aBd11b3faAE801Fd4c4687';
+      case 'borrowETH':
         return userAddress;
       default:
         return null;
@@ -127,7 +122,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
   const allowance = useAllowance();
 
   useEffect(() => {
-    allowance("0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33");
+    allowance('0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33');
   }, [formik.values.amount, data]);
 
   // Approve Hanlder
@@ -140,10 +135,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
       formik.values.rateMode.toNumber() === 1
         ? stableToken(
             contractsAddress.proxyMockAddress,
-            parseUnits(
-              formik.values.amount.toString(),
-              getTokenDecimals(data, chainId, formik)
-            ),
+            parseUnits(formik.values.amount.toString(), getTokenDecimals(data, chainId, formik)),
             getStableDebt(data, chainId, formik),
             getTokenDecimals(data, chainId, formik)
           )
@@ -157,10 +149,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
       approve(
         approveSwitcher(data.methodName),
         contractsAddress.proxyMockAddress,
-        parseUnits(
-          formik.values.amount.toString(),
-          getTokenDecimals(data, chainId, formik)
-        )
+        parseUnits(formik.values.amount.toString(), getTokenDecimals(data, chainId, formik))
       );
     }
   };
@@ -185,42 +174,37 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
 
   const executionHandler = async () => {
     let finalProtcoloData: any;
-    if (data.methodName.includes("ETH")) {
+    if (data.methodName.includes('ETH')) {
       finalProtcoloData = Object.values(
         formik.values.map((objData: any, index: number) => {
-          delete objData["showTokens"];
+          delete objData['showTokens'];
           return {
             ...objData,
-            amount: parseEther(formik.values.amount.toString()),
+            amount: parseEther(formik.values.amount.toString())
           };
         })
       );
       EthMethodSwitcher(data.methodName) &&
-        (finalProtcoloData[0]["others"] = EthMethodSwitcher(data.methodName));
-      var encodedBytes = bytesEncoder(
-        contractsAddress.haaveAddress,
-        data.methodName,
-        [...Object.values(finalProtcoloData[0])]
-      );
+        (finalProtcoloData[0]['others'] = EthMethodSwitcher(data.methodName));
+      var encodedBytes = bytesEncoder(contractsAddress.haaveAddress, data.methodName, [
+        ...Object.values(finalProtcoloData[0])
+      ]);
       // execMock(
       //   contractsAddress.haaveAddress,
       //   encodedBytes,
       //   formik.values.amount
       // );
     } else {
-      delete formik.values["showTokens"];
+      delete formik.values['showTokens'];
       finalProtcoloData = {
         ...formik.values,
         token: getTokenAddress(data, chainId, formik),
-        amount: parseUnits(
-          formik.values.amount.toString(),
-          getTokenDecimals(data, chainId, formik)
-        ),
+        amount: parseUnits(formik.values.amount.toString(), getTokenDecimals(data, chainId, formik))
       };
 
-      finalProtcoloData["userAddress"] = userAddress;
+      finalProtcoloData['userAddress'] = userAddress;
       executionSwitcher(data.methodName) &&
-        (finalProtcoloData["exec"] = executionSwitcher(data.methodName));
+        (finalProtcoloData['exec'] = executionSwitcher(data.methodName));
 
       const encodedBytes = bytesEncoder(
         contractsAddress.haaveAddress,
@@ -251,29 +235,29 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
   async function onSubmit() {
     const encodeData = await executionHandler();
     const newProtocol = { ...data, encodeData };
-    newProtocol["initialData"] = formik.values;
-    newProtocol["protocol_id"] = protocol_id;
+    newProtocol['initialData'] = formik.values;
+    newProtocol['protocol_id'] = protocol_id;
 
-    if (data.methodName == "flashLoan") {
+    if (data.methodName == 'flashLoan') {
       setSavedProtocols((oldData: any) => [
         ...oldData,
         {
-          "flashLoan-start": true,
-          "flashLoan-end": false,
+          'flashLoan-start': true,
+          'flashLoan-end': false,
           notDraggable: true,
           ...newProtocol,
-          protocol_id: protocol_id,
-        },
+          protocol_id: protocol_id
+        }
       ]);
       setSavedProtocols((oldData: any) => [
         ...oldData,
         {
-          "flashLoan-end": true,
-          "flashLoan-start": false,
+          'flashLoan-end': true,
+          'flashLoan-start': false,
           notDraggable: true,
           ...newProtocol,
-          protocol_id: protocol_id,
-        },
+          protocol_id: protocol_id
+        }
       ]);
     } else {
       setSavedProtocols((oldData: any) => [...oldData, newProtocol]);
@@ -283,8 +267,8 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
 
   // Token Toggle Handler
   const handleTokensToggle = () => {
-    formik.setFieldValue("showTokens", !formik.values.showTokens);
-    console.log(formik.values.showTokens, "show tokens");
+    formik.setFieldValue('showTokens', !formik.values.showTokens);
+    console.log(formik.values.showTokens, 'show tokens');
   };
 
   const { totalData, loading, error } = UseApy(
@@ -295,15 +279,11 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
   const { ltvData } = GetLtv(data?.ltv[chainId]);
 
   if (chainId) {
-    for (
-      let i = 0;
-      i < data?.data?.function_configs?.inputs[chainId].length;
-      i++
-    ) {
+    for (let i = 0; i < data?.data?.function_configs?.inputs[chainId].length; i++) {
       formik.initialValues.push(...data?.initialData);
     }
   }
-  console.log(formik.values, "formik values");
+  console.log(formik.values, 'formik values');
   // console.log({ totalData, ltvData });
   useEffect(() => {
     if (!loading && chainId) {
@@ -314,16 +294,14 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
         finalArray.push({ name: key, value });
       });
       finalArray.push(...ltvData);
-      const finalData = data?.attributes?.map(
-        (obj: { name: string; value: any }) => {
-          const { name } = obj;
-          var result: any = finalArray.find((item: any) => item.name === name);
-          return {
-            ...obj,
-            value: result?.value,
-          };
-        }
-      );
+      const finalData = data?.attributes?.map((obj: { name: string; value: any }) => {
+        const { name } = obj;
+        var result: any = finalArray.find((item: any) => item.name === name);
+        return {
+          ...obj,
+          value: result?.value
+        };
+      });
     }
   }, [data, formik.values, loading]);
 
@@ -346,7 +324,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
 
   // console.log(getAllowance(), "allowance in add protocol");
 
-  console.log(data.methodName.includes("Eth"), "includes eth");
+  console.log(data.methodName.includes('Eth'), 'includes eth');
   return (
     <FormikProvider value={formik}>
       <Form>
@@ -374,16 +352,11 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
             
           </FieldArray> */}
           <div className="input-section mt-3">
-            {data.methodName.includes("ETH") ? (
+            {data.methodName.includes('ETH') ? (
               <>
                 <p className="label m-0">Amount</p>
                 <div>
-                  <InputField
-                    name="amount"
-                    type="number"
-                    placeholder="Amount"
-                    textAlign="start"
-                  />
+                  <InputField name="amount" type="number" placeholder="Amount" textAlign="start" />
                 </div>
               </>
             ) : (
@@ -395,9 +368,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
                       type="text"
                       value={formik.values.onBehalfOf}
                       id="address"
-                      onChange={(event) =>
-                        formik.setFieldValue("onBehalfOf", event.target.value)
-                      }
+                      onChange={(event) => formik.setFieldValue('onBehalfOf', event.target.value)}
                       placeholder="ENS or Address"
                       className="w-100 mt-2 meta-address"
                     />
@@ -412,8 +383,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
                           <Icon
                             icon={
                               data?.function_configs.tokens[chainId]?.find(
-                                ({ symbol }: any) =>
-                                  symbol === formik.values.token
+                                ({ symbol }: any) => symbol === formik.values.token
                               )?.icon
                             }
                             width="24"
@@ -435,9 +405,8 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
                     </div>
                     <div
                       className={`position-absolute ${
-                        formik.values.showTokens ? "d-block" : "d-none"
-                      }`}
-                    >
+                        formik.values.showTokens ? 'd-block' : 'd-none'
+                      }`}>
                       <ASelectToken
                         showTokens={formik.values.showTokens}
                         tokens={data?.function_configs.tokens[chainId]}
@@ -448,21 +417,13 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
                     </div>
                     <span
                       className={`input-text ${
-                        data?.hasOwnProperty("isFlashloan")
-                          ? "d-none"
-                          : "d-block"
-                      }`}
-                    >
+                        data?.hasOwnProperty('isFlashloan') ? 'd-none' : 'd-block'
+                      }`}>
                       <FaArrowDown />
                     </span>
                   </Col>
                   <Col md={8}>
-                    <InputField
-                      name="amount"
-                      type="number"
-                      placeholder="Amount"
-                      textAlign="end"
-                    />
+                    <InputField name="amount" type="number" placeholder="Amount" textAlign="end" />
 
                     <div className="d-flex justify-content-end mt-4">
                       <GetBalance
@@ -483,10 +444,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
                           autoFocus={true}
                           checkedChildren="Variable"
                           onChange={(value) =>
-                            formik.setFieldValue(
-                              "rateMode",
-                              BigNumber.from(+value + 1)
-                            )
+                            formik.setFieldValue('rateMode', BigNumber.from(+value + 1))
                           }
                           defaultChecked
                           unCheckedChildren="Stable"
@@ -506,8 +464,7 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
                               <Icon
                                 icon={
                                   data?.function_configs?.tokens[chainId]?.find(
-                                    (tokenData: any) =>
-                                      tokenData.symbol === formik.values.token
+                                    (tokenData: any) => tokenData.symbol === formik.values.token
                                   ).icon
                                 }
                                 width="24"
@@ -529,53 +486,30 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
                 )}
 
                 <div className="bottom-section mt-2">
-                  {data?.attributes?.map(
-                    ({ name, value }: any, index: number) => (
-                      <div
-                        key={index}
-                        className="d-flex justify-content-between align-items-center"
-                      >
-                        <p className="fs-6 mb-0 mt-">{name}</p>
-                        <p className="fs-6 mb-0 mt-1">
-                          {loading ? (
-                            <Spin indicator={antIcon} />
-                          ) : error ? (
-                            "N/A"
-                          ) : (
-                            value + "%"
-                          )}{" "}
-                        </p>
-                      </div>
-                    )
-                  )}
+                  {data?.attributes?.map(({ name, value }: any, index: number) => (
+                    <div key={index} className="d-flex justify-content-between align-items-center">
+                      <p className="fs-6 mb-0 mt-">{name}</p>
+                      <p className="fs-6 mb-0 mt-1">
+                        {loading ? <Spin indicator={antIcon} /> : error ? 'N/A' : value + '%'}{' '}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </>
             )}
           </div>
           <button
             type="submit"
-            className="set-btn w-100 mt-3 rounded py-2 fs-5 fw-bold text-light border-0"
-          >
+            className="set-btn w-100 mt-3 rounded py-2 fs-5 fw-bold text-light border-0">
             Set
           </button>
         </AddProtocolStyled>
       </Form>
       <div className="icon-container">
-        {/* <FaPlus
-          className={`plus-icon top-icon ${
-            (exchangeItems.length || savedProtocols.length) && "d-none"
-          }`}
-          color="white"
-          onClick={() => {
-            setAddCubeModal(!addCubeModal);
-          }}
-          fontSize={26}
-        /> */}
         <div
           className={`bottom-icon ${
-            exchangeItems.length || savedProtocols.length ? "d-flex" : "d-none"
-          }`}
-        >
+            exchangeItems.length || savedProtocols.length ? 'd-flex' : 'd-none'
+          }`}>
           <div className="me-3">
             <CustomButton
               bgcolor={primaryColor}
@@ -589,40 +523,6 @@ const AaveBox = ({ data, setAddCubeModal }: any) => {
               borderRadius="50%"
               // disabled={+isAllowance! > 0 && true}
               clicked={approveHandler}
-            />
-          </div>
-          {/* <FaBitbucket
-            className=""
-            color="white"
-            onClick={approveHandler}
-            fontSize={26}
-            title="Approve"
-          /> */}
-
-          <div className="">
-            <CustomButton
-              bgcolor={primaryColor}
-              color="white"
-              padding="8px 8px"
-              width="60px"
-              height="60px"
-              type="submit"
-              title="Add"
-              fontSize="12px"
-              borderRadius="50%"
-              // disabled={
-              // async()=> ( await allowance(
-              //   getTokenAddress(data, chainId, formik),
-              //   userAddress,
-              //   getTokenAddress(data, chainId, formik)
-              // ) > 0)
-              //   ? true
-              //   : false
-              // }
-              clicked={() => {
-                setAddCubeModal(!addCubeModal);
-                setExchageItems([]);
-              }}
             />
           </div>
           <div className="ms-3">

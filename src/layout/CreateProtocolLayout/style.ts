@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { primaryColor } from "../../components/Global";
+import styled from 'styled-components';
+import { primaryColor } from '../../components/Global';
 
 const CreateProtocolLayoutStyle = styled.div`
   padding-bottom: 60px;
@@ -39,7 +39,7 @@ const CreateProtocolLayoutStyle = styled.div`
     max-width: 450px;
     margin-top: 18px;
 
-    .plus-icon {
+    .action-icon {
       background-color: ${primaryColor};
       border-radius: 50%;
       padding: 14px;
@@ -51,11 +51,18 @@ const CreateProtocolLayoutStyle = styled.div`
       align-items: center;
       cursor: pointer;
       box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+      position: relative;
     }
-    .bottom-icon {
-      position: absolute;
+    .plus-icon {
       z-index: 1;
       bottom: 2%;
+      position: absolute;
+    }
+    .execute-icon {
+      z-index: 1;
+      bottom: 2%;
+      position: absolute;
+      right: 40%;
     }
 
     .top-icon {

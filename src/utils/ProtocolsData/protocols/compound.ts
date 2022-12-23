@@ -9,6 +9,7 @@ const compoundProtocolData = [
     description: '',
     tag: [],
     protocolName: 'Compound',
+    protocolIcon: 'cryptocurrency:add',
     protocolLogo: '',
     initialData: {
       userProxy: '',
@@ -52,6 +53,7 @@ const compoundProtocolData = [
     description: '',
     tag: '',
     protocolName: 'Compound',
+    protocolIcon: 'cryptocurrency:add',
     protocolLogo: '',
     initialData: {
       userProxy: '',
@@ -94,6 +96,7 @@ const compoundProtocolData = [
     description: '',
     tag: '',
     protocolName: 'Compound',
+    protocolIcon: 'cryptocurrency:add',
     protocolLogo: '',
     initialData: {
       userProxy: '',
@@ -154,6 +157,7 @@ const compoundProtocolData = [
     description: '',
     tag: '',
     protocolName: 'Compound',
+    protocolIcon: 'cryptocurrency:add',
     protocolLogo: '',
     initialData: {
       userProxy: '',
@@ -214,6 +218,7 @@ const compoundProtocolData = [
     description: '',
     tag: '',
     protocolName: 'Compound',
+    protocolIcon: 'cryptocurrency:add',
     protocolLogo: '',
     initialData: {
       userProxy: '',
@@ -273,6 +278,7 @@ const compoundProtocolData = [
     description: '',
     tag: '',
     protocolName: 'Compound',
+    protocolIcon: 'cryptocurrency:add',
     protocolLogo: '',
     initialData: {
       userProxy: '',
